@@ -22,7 +22,7 @@ public class BouncePower : MonoBehaviour, IPowerUp
     {
         isActive = true;
         playerRB.velocity = new Vector2(playerRB.velocity.x, 0);
-        if(playerRB.GetComponent<PlayerMovement>().isInverse)
+        if(playerRB.GetComponent<PlayerMovement>().IsInverse)
         {
             playerRB.AddForce(Vector2.down * 15, ForceMode2D.Impulse);
         }
@@ -30,7 +30,7 @@ public class BouncePower : MonoBehaviour, IPowerUp
         {
             playerRB.AddForce(Vector2.up * 15, ForceMode2D.Impulse);
         }
-        
+        playerRB.GetComponent<PlayerMovement>().IsBouncing = true;
         StartCoroutine(Deactivate());
     }
 

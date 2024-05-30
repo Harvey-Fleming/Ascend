@@ -15,7 +15,8 @@ public class PlayerMovement : MonoBehaviour
 
     private float drag = 0.2f;
 
-    public bool isInverse = false;
+    private bool isInverse = false;
+    private bool isBouncing = false;
 
     [SerializeField] private LayerMask GroundLayerMask;
 
@@ -26,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
 
 
     public float GravityScale { get => gravityScale; set => gravityScale = value; }
+    public bool IsInverse { get => isInverse; set => isInverse = value; }
+    public bool IsBouncing { get => isBouncing; set => isBouncing = value; }
 
 
     // Start is called before the first frame update
@@ -62,7 +65,8 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Space))
+        //Variable Jump Height
+        if((Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Space)) && !IsBouncing)
         {
             if(!isInverse)
                 rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
@@ -78,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            IsBouncing = false;
             coyoteTimer = 0;
         }
     }

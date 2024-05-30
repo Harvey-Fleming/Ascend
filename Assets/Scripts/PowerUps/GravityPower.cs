@@ -30,7 +30,7 @@ public class GravityPower : MonoBehaviour, IPowerUp
         //    Camera.main.transform.rotation = Quaternion.Euler(Camera.main.transform.rotation.x, Camera.main.transform.rotation.y, 0);
         //}
         
-        playerMovement.isInverse = !playerMovement.isInverse;
+        playerMovement.IsInverse = !playerMovement.IsInverse;
         playerMovement.GravityScale *= -1;
         playerMovement.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(playerMovement.gameObject.GetComponent<Rigidbody2D>().velocity.x, 0);
         playerMovement.gameObject.transform.localScale = new Vector3(playerMovement.gameObject.transform.localScale.x , playerMovement.gameObject.transform.localScale.y * -1, playerMovement.gameObject.transform.localScale.z);
@@ -40,7 +40,7 @@ public class GravityPower : MonoBehaviour, IPowerUp
     public static void StaticActivate()
     {
         PlayerMovement playerMovement = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();
-        playerMovement.isInverse = !playerMovement.isInverse;
+        playerMovement.IsInverse = !playerMovement.IsInverse;
         playerMovement.GravityScale *= -1;
         playerMovement.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(playerMovement.gameObject.GetComponent<Rigidbody2D>().velocity.x, 0);
         playerMovement.gameObject.transform.localScale = new Vector3(playerMovement.gameObject.transform.localScale.x, playerMovement.gameObject.transform.localScale.y * -1, playerMovement.gameObject.transform.localScale.z);

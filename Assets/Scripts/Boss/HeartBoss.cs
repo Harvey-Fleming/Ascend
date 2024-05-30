@@ -6,19 +6,26 @@ using UnityEngine.UI;
 
 public class HeartBoss : MonoBehaviour
 {
+    [Header("State")]
     public bool hasStarted;
+    [SerializeField] HeartState currentAttack = HeartState.idle;
 
-    int health = 3;
-    [SerializeField] int maxhealth = 3;
+    [Header("Health")]
+    [SerializeField] int currentHealth = 3;
+    [SerializeField] int maxHealth = 3;
 
-    [SerializeField] ParticleSystem bloodpSys1;
-    [SerializeField] ParticleSystem bloodpSys2;
-
-
+    [Space]
+    [Header("Particle Systems")]
+    [SerializeField] ParticleSystem leftBloodPSys;
+    [SerializeField] ParticleSystem rightBloodPSys;
     [SerializeField] ParticleSystem BeamPSys;
+
+    [Space]
+    [Header("Beam Variables")]
     [SerializeField] private float beamSpeed;
 
     [Space]
+    [Header("Arrow Variables")]
     [SerializeField] GameObject arrowPrefab;
     [SerializeField] private float arrowSpeed = 1f;
     GameObject[] arrows = new GameObject[5];
@@ -26,7 +33,7 @@ public class HeartBoss : MonoBehaviour
     [Space]
     [SerializeField] Image blackImage;
 
-    HeartState currentAttack = HeartState.idle;
+
 
     [SerializeField] Sprite deathSprite;
 
@@ -56,6 +63,7 @@ public class HeartBoss : MonoBehaviour
         //if (Input.GetKeyDown(KeyCode.J))
         //{
         //    StopCoroutine(beamAttack);
+        //    BeamPSys.Stop();
         //    NextAttack();
         //}
     }
@@ -81,11 +89,17 @@ public class HeartBoss : MonoBehaviour
 
     IEnumerator BeamAttack()
     {
+        ParticleSystem.ShapeModule beamShape = BeamPSys.shape;
+        Vector3 beamRot = BeamPSys.shape.rotation;
+        beamRot.x = 0;
+        beamShape.rotation = beamRot;
+
         BeamPSys.Play();
+
         while(BeamPSys.shape.rotation.x < 360)
         {
-            ParticleSystem.ShapeModule beamShape = BeamPSys.shape;
-            Vector3 beamRot = BeamPSys.shape.rotation;
+            beamShape = BeamPSys.shape;
+            beamRot = BeamPSys.shape.rotation;
             beamRot.x += 1 * Time.deltaTime * beamSpeed;
             beamShape.rotation = beamRot;
             yield return new WaitForSeconds(0.01f);
@@ -98,7 +112,7 @@ public class HeartBoss : MonoBehaviour
 
     IEnumerator ArrowAttack()
     {
-
+        
         for(int i = 0; i < 5; i++)
         {
             Vector3 pPos = GameObject.FindWithTag("Player").transform.position;
@@ -114,8 +128,11 @@ public class HeartBoss : MonoBehaviour
                 arrows[i].transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
                 yield return new WaitForSeconds(0.01f);
             }
+
+            arrows[i].SetActive(false);
         }
         arrowAttack = null;
+        currentAttack = HeartState.idle;
         yield return null;
     }
 
@@ -128,9 +145,9 @@ public class HeartBoss : MonoBehaviour
     {
         if(hasStarted)
         Debug.Log("Boss has Taken Damage");
-        health--;
+        currentHealth--;
 
-        if(health <= 0)
+        if(currentHealth <= 0)
         {
             Death();
         }
@@ -155,8 +172,8 @@ public class HeartBoss : MonoBehaviour
 
         GetComponent<CircleCollider2D>().enabled = false;
 
-        bloodpSys1.Play();
-        bloodpSys2.Play();
+        leftBloodPSys.Play();
+        rightBloodPSys.Play();
 
         FindObjectOfType<TimeManager>().StopTimer();
 
@@ -170,7 +187,6 @@ public class HeartBoss : MonoBehaviour
         {
             t += 1 * Time.deltaTime;
             blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, Mathf.Lerp(blackImage.color.a, 1, t));
-            Debug.Log(blackImage.color.a);
             yield return new WaitForSeconds(0.1f);
         }
         blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, 1);
@@ -183,9 +199,18 @@ public class HeartBoss : MonoBehaviour
         if(hasStarted)
         {
             Debug.Log("Boss Reset");
-            health = maxhealth;
+            currentHealth = maxHealth;
             if(arrowAttack != null)
                 StopCoroutine(arrowAttack);
+
+            if (beamAttack != null)
+                StopCoroutine(beamAttack);
+
+            BeamPSys.Stop();
+            ParticleSystem.ShapeModule beamShape = BeamPSys.shape;
+            Vector3 beamRot = BeamPSys.shape.rotation;
+            beamRot.x = 0;
+            beamShape.rotation = beamRot;
 
             foreach (GameObject arrow in arrows)
             {

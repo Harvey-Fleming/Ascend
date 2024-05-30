@@ -73,7 +73,7 @@ public class PlayerHealth : MonoBehaviour
         }
         transform.position = lastCheckpoint.transform.position;
 
-        if(GetComponent<PlayerMovement>().isInverse)
+        if(GetComponent<PlayerMovement>().IsInverse)
         {
             GravityPower.StaticActivate();
         }

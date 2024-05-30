@@ -24,7 +24,7 @@ public class HeartBossTrigger : MonoBehaviour
 
                 bossBlockingPlatform.SetActive(true);
 
-                if(FindObjectOfType<PlayerMovement>().isInverse)
+                if(FindObjectOfType<PlayerMovement>().IsInverse)
                 {
                     GravityPower.StaticActivate();
                 }
@@ -43,7 +43,7 @@ public class HeartBossTrigger : MonoBehaviour
 
         bossBlockingPlatform.SetActive(false);
 
-        if (FindObjectOfType<PlayerMovement>().isInverse)
+        if (FindObjectOfType<PlayerMovement>().IsInverse)
         {
             GravityPower.StaticActivate();
         }

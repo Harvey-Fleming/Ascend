@@ -39,5 +39,9 @@ public class BossLever : MonoBehaviour
     {
         hasUsed = false;
         sr.sprite = up;
+        if (leverPlatform != null)
+        {
+            leverPlatform.SetActive(false);
+        }
     }
 }

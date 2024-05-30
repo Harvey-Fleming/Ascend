@@ -10,7 +10,7 @@ public class GravityReverterField : MonoBehaviour
     {
         if(collision.gameObject.tag == "Player")
         {
-            if(collision.GetComponent<PlayerMovement>().isInverse)
+            if(collision.GetComponent<PlayerMovement>().IsInverse)
             {
                 GravityPower.StaticActivate();
             }
