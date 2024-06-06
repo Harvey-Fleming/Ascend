@@ -85,6 +85,11 @@ public class PlayerMovement : MonoBehaviour
             IsBouncing = false;
             coyoteTimer = 0;
         }
+
+        //if(Input.GetKeyDown(KeyCode.K))
+        //{
+        //    transform.position = new Vector3(transform.position.x, 115);
+        //}
     }
 
     private void FixedUpdate()

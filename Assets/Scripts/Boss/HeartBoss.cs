@@ -95,13 +95,15 @@ public class HeartBoss : MonoBehaviour
         beamShape.rotation = beamRot;
 
         BeamPSys.Play();
-
+        Debug.Log(beamSpeed);
         while(BeamPSys.shape.rotation.x < 360)
         {
             beamShape = BeamPSys.shape;
             beamRot = BeamPSys.shape.rotation;
-            beamRot.x += 1 * Time.deltaTime * beamSpeed;
+            beamRot.x += beamSpeed * 0.01f;
             beamShape.rotation = beamRot;
+            Debug.Log(Time.deltaTime);
+            Debug.Log(beamShape.rotation);
             yield return new WaitForSeconds(0.01f);
         }
         BeamPSys.Stop();
@@ -123,7 +125,7 @@ public class HeartBoss : MonoBehaviour
 
             while(Vector3.Distance(pPos, arrows[i].transform.position) > 0.5f)
             {                  
-                arrows[i].transform.position += dir.normalized * arrowSpeed * Time.deltaTime;
+                arrows[i].transform.position += dir.normalized * arrowSpeed * 0.01f;
                 float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
                 arrows[i].transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
                 yield return new WaitForSeconds(0.01f);
