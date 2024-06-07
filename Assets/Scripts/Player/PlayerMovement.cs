@@ -13,11 +13,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpCutModifier = 0.5f;
     private float coyoteTimer = 0f;
 
+
+    private float jumpBufferTimer = 0f;
+    [SerializeField] private float maxJumpBufferTimer = 0.2f;
+
     private float drag = 0.2f;
 
     private bool isInverse = false;
     private bool isBouncing = false;
-
+    [Space]
     [SerializeField] private LayerMask GroundLayerMask;
 
     BoxCollider2D boxCollider;
@@ -51,7 +55,17 @@ public class PlayerMovement : MonoBehaviour
             Turn();
         }
 
-        if((IsGrounded() || coyoteTimer < maxCoyoteTimer) & (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow)))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            jumpBufferTimer = maxJumpBufferTimer;
+
+        }
+        else
+        {
+            jumpBufferTimer -= Time.deltaTime;
+        }
+
+        if ((IsGrounded() || coyoteTimer < maxCoyoteTimer) & jumpBufferTimer > 0)
         {
             if(!isInverse)
             {
@@ -63,7 +77,11 @@ public class PlayerMovement : MonoBehaviour
                 rb.velocity = new Vector2(rb.velocity.x, 0);
                 rb.AddForce(Vector2.down * jumpForce, ForceMode2D.Impulse);
             }
+
+            jumpBufferTimer = 0f;
         }
+
+
 
         //Variable Jump Height
         if((Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Space)) && !IsBouncing)
