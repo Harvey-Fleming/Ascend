@@ -102,8 +102,6 @@ public class HeartBoss : MonoBehaviour
             beamRot = BeamPSys.shape.rotation;
             beamRot.x += beamSpeed * 0.01f;
             beamShape.rotation = beamRot;
-            Debug.Log(Time.deltaTime);
-            Debug.Log(beamShape.rotation);
             yield return new WaitForSeconds(0.01f);
         }
         BeamPSys.Stop();
@@ -181,6 +179,7 @@ public class HeartBoss : MonoBehaviour
         FindObjectOfType<TimeManager>().StopTimer();
 
         GameManager.instance.StartFadeToBlack();
+        GameManager.instance.SubmitScore();
     }
 
     public void ResetBoss()

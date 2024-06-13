@@ -8,33 +8,48 @@ using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
-    DateTime time;
+    public static TimeManager instance { get; private set; }
+
+
+    DateTime timer;
     [SerializeField] TMP_Text timerText;
 
     [SerializeField] Button startButton;
 
     bool isRunning = false;
 
+        public DateTime Timer { get => timer; set => timer = value; }
 
+    private void Awake()
+    {
+        if(instance != null)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
         if(isRunning)
         {
-            time = time.AddSeconds(1 * Time.deltaTime);
+            timer = timer.AddSeconds(1 * Time.deltaTime);
 
-            if (time.Hour > 0)
+            if (timer.Hour > 0)
             {
-                timerText.text = time.ToString("HH:mm:ss:fff");
+                timerText.text = timer.ToString("HH:mm:ss:fff");
             }
-            else if (time.Minute > 0)
+            else if (timer.Minute > 0)
             {
-                timerText.text = time.ToString("mm:ss:fff");
+                timerText.text = timer.ToString("mm:ss:fff");
             }
             else
             {
-                timerText.text = time.ToString("ss:fff");
+                timerText.text = timer.ToString("ss:fff");
             }
         }
 
@@ -57,7 +72,7 @@ public class TimeManager : MonoBehaviour
 
     public DateTime GetTimer()
     {
-        return time;
+        return timer;
     }
 
     public void StopTimer()

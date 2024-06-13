@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -11,7 +12,7 @@ public class GameManager : MonoBehaviour
 
     int totalTime = 0;
 
-    int leaderboardID = 22427;
+    int leaderboardID = 22844;
 
     [SerializeField] private GameObject leaderboardPrefab;
     [SerializeField] private Transform leaderboardParent;
@@ -37,6 +38,14 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         StartCoroutine(LoginRoutine());
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            Debug.Log(TimeManager.instance.Timer.Millisecond + TimeManager.instance.Timer.Second * 1000 + ((TimeManager.instance.Timer.Minute * 60) * 1000) + ((TimeManager.instance.Timer.Hour * 3600) * 1000));
+        }
     }
 
     public void StartFadeToBlack()
@@ -93,20 +102,17 @@ public class GameManager : MonoBehaviour
 
     public void SubmitScore()
     {
-        Image blackImage = GameObject.Find("Black Screen Image").GetComponent<Image>();
-
-        if (blackImage != null)
-        {
-            StartCoroutine(SubmitScoreRoutine());
-
-        }
+        StartCoroutine(SubmitScoreRoutine());
     }
 
     public IEnumerator SubmitScoreRoutine()
     {
+        //Convert Time to Score
+        int score = TimeManager.instance.Timer.Millisecond + TimeManager.instance.Timer.Second * 1000 + ((TimeManager.instance.Timer.Minute * 60) * 1000) + ((TimeManager.instance.Timer.Hour * 3600) * 1000);
+
         bool done = false;
         string playerID = PlayerPrefs.GetString("PlayerID");
-        LootLockerSDKManager.SubmitScore(playerID, totalTime, leaderboardID.ToString(), (response) =>
+        LootLockerSDKManager.SubmitScore(playerID, score, leaderboardID.ToString(), (response) =>
         {
             if (response.success)
             {
@@ -132,7 +138,25 @@ public class GameManager : MonoBehaviour
                 foreach(LootLockerLeaderboardMember member in response.items)
                 {
                     GameObject leaderboardElement = Instantiate(leaderboardPrefab, leaderboardParent);
-                    leaderboardElement.GetComponent<TextMeshProUGUI>().text = "#" + member.rank + "  " + member.player.id + "      " + member.score;
+                    DateTime time = new();
+                    Debug.Log(member.score);
+                    time = time.AddMilliseconds(member.score);
+                    Debug.Log("#" + member.rank + "  " + member.player.id + "      " + time.ToString("HH:mm:ss:fff"));
+                    //leaderboardElement.GetComponent<TextMeshProUGUI>().text = "#" + member.rank + "  " + member.player.id + "      " + time.;
+
+                    if (time.Hour > 0)
+                    {
+                        leaderboardElement.GetComponent<TextMeshProUGUI>().text = "#" + member.rank + "  " + member.player.id + "      " + time.ToString("HH:mm:ss:fff");
+                    }
+                    else if (time.Minute > 0)
+                    {
+                        leaderboardElement.GetComponent<TextMeshProUGUI>().text = "#" + member.rank + "  " + member.player.id + "      " + time.ToString("mm:ss:fff");
+                    }
+                    else
+                    {
+                        leaderboardElement.GetComponent<TextMeshProUGUI>().text = "#" + member.rank + "  " + member.player.id + "      " + time.ToString("ss:fff");
+                    }
+
                 }
             }
             else
