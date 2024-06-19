@@ -7,6 +7,14 @@ public class PlayerManager : MonoBehaviour
 
     bool isPaused = false;
 
+    public bool IsPaused { get => isPaused;}
+
+    private void Start()
+    {
+        isPaused = true;
+        Time.timeScale = 0;
+    }
+
     // Update is called once per frame
     void Update()
     {

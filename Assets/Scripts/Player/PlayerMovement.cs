@@ -180,17 +180,20 @@ public class PlayerMovement : MonoBehaviour
 
     private void WallSlide()
     {
-        if (IsPressedAgainstWall() && !IsGrounded() && horizontalInput != 0 && rb.velocity.y <= 0)
+        if (IsPressedAgainstWall() && !IsGrounded() && horizontalInput != 0 && rb.velocity.y <= 0 )
         {
             isWallSliding = true;
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
         }
         else
         {
+            if(IsGrounded())
+            {
+                wallJumpTimer = 0;
+            }
             isWallSliding = false;
+            
         }
-
-        Debug.Log(isWallSliding);
     }
 
     private void WallJump()
