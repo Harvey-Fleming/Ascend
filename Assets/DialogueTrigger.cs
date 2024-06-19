@@ -17,7 +17,7 @@ public class DialogueTrigger : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if(!hasRan && !FindObjectOfType<PlayerManager>().IsPaused)
+        if(!hasRan && !FindObjectOfType<PlayerManager>().IsPaused && collision.gameObject.CompareTag("Player"))
         {
             hasRan = true;
             dialogueRunner.StartDialogue(nodeName);
