@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using LootLocker.Requests;
 
 public class CollectCoin : MonoBehaviour
 {
@@ -10,18 +7,7 @@ public class CollectCoin : MonoBehaviour
 
     int coinsGathered = 0;
 
-    int leaderboardID = 22427;
-
     public int CoinsGathered { get => coinsGathered; set => coinsGathered = value; }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            StartCoroutine(SubmitScoreRoutine());
-        }
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -33,23 +19,5 @@ public class CollectCoin : MonoBehaviour
         }
     }
 
-    public IEnumerator SubmitScoreRoutine()
-    {
-        bool done = false;
-        string playerID = PlayerPrefs.GetString("PlayerID");
-        LootLockerSDKManager.SubmitScore(playerID, coinsGathered, leaderboardID.ToString(), (response) =>
-        {
-            if (response.success)
-            {
-                Debug.Log("Uploaded Score");
-                done = true;
-            }
-            else
-            {
-                Debug.Log("Could not upload Score");
-                done = true;
-            }
-        });
-        yield return new WaitWhile(() => done == false);
-    }
+
 }

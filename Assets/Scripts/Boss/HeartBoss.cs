@@ -102,8 +102,6 @@ public class HeartBoss : MonoBehaviour
             beamRot = BeamPSys.shape.rotation;
             beamRot.x += beamSpeed * 0.01f;
             beamShape.rotation = beamRot;
-            Debug.Log(Time.deltaTime);
-            Debug.Log(beamShape.rotation);
             yield return new WaitForSeconds(0.01f);
         }
         BeamPSys.Stop();
@@ -156,6 +154,7 @@ public class HeartBoss : MonoBehaviour
 
     }
 
+    [ContextMenu("Kill Boss")]
     private void Death()
     {
         currentAttack = HeartState.Death;
@@ -179,21 +178,8 @@ public class HeartBoss : MonoBehaviour
 
         FindObjectOfType<TimeManager>().StopTimer();
 
-        StartCoroutine("FadeToBlack");
-    }
-
-    IEnumerator FadeToBlack()
-    {
-        float t = 0f;
-        while (blackImage.color.a <= 0.9)
-        {
-            t += 1 * Time.deltaTime;
-            blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, Mathf.Lerp(blackImage.color.a, 1, t));
-            yield return new WaitForSeconds(0.1f);
-        }
-        blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, 1);
-        FindObjectOfType<FinalScreen>().OnShowScreen(FindObjectOfType<TimeManager>().GetTimer(), FindObjectOfType<CollectCoin>().CoinsGathered);
-        yield return null;
+        GameManager.instance.StartFadeToBlack();
+        GameManager.instance.SubmitScore();
     }
 
     public void ResetBoss()

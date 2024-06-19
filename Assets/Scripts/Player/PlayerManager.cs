@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using LootLocker.Requests;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -8,30 +7,12 @@ public class PlayerManager : MonoBehaviour
 
     bool isPaused = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        StartCoroutine(LoginRoutine());
-    }
+    public bool IsPaused { get => isPaused;}
 
-    IEnumerator LoginRoutine()
+    private void Start()
     {
-        bool done = false;
-        LootLockerSDKManager.StartGuestSession((response) =>
-        {
-            if (response.success)
-            {
-                Debug.Log("Player Logged in");
-                PlayerPrefs.SetString("PlayerID", response.player_id.ToString());
-                done = true;
-            }
-            else
-            {
-                Debug.Log("Could not start Session");
-                done = true;
-            }
-        });
-        yield return new WaitWhile(() => done == false);
+        isPaused = true;
+        Time.timeScale = 0;
     }
 
     // Update is called once per frame
