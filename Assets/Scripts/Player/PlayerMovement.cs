@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -42,11 +43,13 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isInverse = false;
     private bool isBouncing = false;
+    private bool canMove = true;
     [Space]
     [SerializeField] private LayerMask GroundLayerMask;
 
     BoxCollider2D boxCollider;
     Rigidbody2D rb;
+    Animator animator;
 
     private float horizontalInput;
 
@@ -61,121 +64,133 @@ public class PlayerMovement : MonoBehaviour
     {
         boxCollider = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        horizontalInput = Input.GetAxisRaw("Horizontal");
-
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
+        if (canMove)
         {
-            jumpBufferTimer = maxJumpBufferTimer;
+            horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        }
-        else
-        {
-            jumpBufferTimer -= Time.deltaTime;
-        }
-
-        if ((IsGrounded() || coyoteTimer < maxCoyoteTimer) & jumpBufferTimer > 0 && !isWallSliding)
-        {
-            if (!isInverse)
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
             {
-                Debug.Log("Applied Normal Jump");
-                rb.velocity = new Vector2(rb.velocity.x, 0);
-                rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                jumpBufferTimer = maxJumpBufferTimer;
+
             }
             else
             {
-                rb.velocity = new Vector2(rb.velocity.x, 0);
-                rb.AddForce(Vector2.down * jumpForce, ForceMode2D.Impulse);
+                jumpBufferTimer -= Time.deltaTime;
             }
 
-            jumpBufferTimer = 0f;
-        }
+            if ((IsGrounded() || coyoteTimer < maxCoyoteTimer) & jumpBufferTimer > 0 && !isWallSliding)
+            {
+                if (!isInverse)
+                {
+                    animator.SetTrigger("Jump");
+                    rb.velocity = new Vector2(rb.velocity.x, 0);
+                    rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                }
+                else
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, 0);
+                    rb.AddForce(Vector2.down * jumpForce, ForceMode2D.Impulse);
+                }
 
-        //Variable Jump Height
-        if ((Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Space)) && !IsBouncing)
-        {
-            if (!isInverse)
-                rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
+                jumpBufferTimer = 0f;
+            }
+
+            //Variable Jump Height
+            if ((Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Space)) && !IsBouncing)
+            {
+                if (!isInverse)
+                    rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
+                else
+                    rb.AddForce(Vector2.up * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
+
+            }
+
+            if (!IsGrounded())
+            {
+                animator.SetBool("IsGrounded", false);
+                coyoteTimer += 1 * Time.deltaTime;
+
+            }
             else
-                rb.AddForce(Vector2.up * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
+            {
+                animator.SetBool("IsGrounded", true);
+                IsBouncing = false;
+                coyoteTimer = 0;
+            }
 
+            WallSlide();
+            WallJump();
+
+            if (!isWallJumping)
+            {
+                Turn();
+            } 
         }
 
-        if (!IsGrounded())
-        {
-            coyoteTimer += 1 * Time.deltaTime;
-
-        }
-        else
-        {
-            IsBouncing = false;
-            coyoteTimer = 0;
-        }
-
-        WallSlide();
-        WallJump();
-
-        if (!isWallJumping)
-        {
-            Turn();
-        }
+        animator.SetFloat("XSpeed", Mathf.Clamp01(Mathf.Abs(horizontalInput)));
+        animator.SetFloat("YSpeed", Mathf.Clamp(rb.velocity.y, -1.0f, 1.0f));
 
     }
 
     private void FixedUpdate()
     {
 
-        //Calculate the desired speed based on input from the player
-        float targetSpeed = horizontalInput * maxSpeed;
-
-        float accelRate;
-
-        //Calculate are run acceleration & deceleration forces using formula: amount = (50 * acceleration) / runMaxSpeed
-        float targetaccel = (50 * speedAcceleration) / maxSpeed;
-
-        //Calculate whether we should be accelerating or decelerating
-        if (IsGrounded())
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? targetaccel : targetaccel;
-        else
-            accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? targetaccel * 0.5f : targetaccel * 0.5f;
-
-        //Calculate difference between current velocity and desired velocity
-        float speedDif = targetSpeed - rb.velocity.x;
-
-        //Calculate force along x-axis to apply to the player
-        float movement = speedDif * accelRate;
-
-        if (!isWallJumping)
+        if (canMove)
         {
-            //Convert this to a vector and apply to rigidbody
-            rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
+            //Calculate the desired speed based on input from the player
+            float targetSpeed = horizontalInput * maxSpeed;
 
-            if (IsGrounded() && Mathf.Abs(horizontalInput) < 0.01f)
+            float accelRate;
+
+            //Calculate are run acceleration & deceleration forces using formula: amount = (50 * acceleration) / runMaxSpeed
+            float targetaccel = (50 * speedAcceleration) / maxSpeed;
+
+            //Calculate whether we should be accelerating or decelerating
+            if (IsGrounded())
+                accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? targetaccel : targetaccel;
+            else
+                accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? targetaccel * 0.5f : targetaccel * 0.5f;
+
+            //Calculate difference between current velocity and desired velocity
+            float speedDif = targetSpeed - rb.velocity.x;
+
+            //Calculate force along x-axis to apply to the player
+            float movement = speedDif * accelRate;
+
+            if (!isWallJumping)
             {
-                float amount = (Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(drag))) * Mathf.Sign(rb.velocity.y);
+                //Convert this to a vector and apply to rigidbody
+                rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
 
-                rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+                if (IsGrounded() && Mathf.Abs(horizontalInput) < 0.01f)
+                {
+                    float amount = (Mathf.Min(Mathf.Abs(rb.velocity.x), Mathf.Abs(drag))) * Mathf.Sign(rb.velocity.y);
+
+                    rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
+                }
             }
-        }
 
-        #region Falling Gravity
-        if (rb.velocity.y < 0 && !isInverse)
-        {
-            rb.gravityScale = gravityScale * fallGravityMultiplier;
+            #region Falling Gravity
+            if (rb.velocity.y < 0 && !isInverse)
+            {
+                rb.gravityScale = gravityScale * fallGravityMultiplier;
+            }
+            else if (rb.velocity.y > 0 && isInverse)
+            {
+                rb.gravityScale = gravityScale * fallGravityMultiplier;
+            }
+            else
+            {
+                rb.gravityScale = gravityScale;
+            }
+            #endregion 
         }
-        else if (rb.velocity.y > 0 && isInverse)
-        {
-            rb.gravityScale = gravityScale * fallGravityMultiplier;
-        }
-        else
-        {
-            rb.gravityScale = gravityScale;
-        }
-        #endregion
     }
 
     private void WallSlide()
@@ -183,6 +198,7 @@ public class PlayerMovement : MonoBehaviour
         if (IsPressedAgainstWall() && !IsGrounded() && horizontalInput != 0 && rb.velocity.y <= 0 )
         {
             isWallSliding = true;
+            animator.SetBool("IsWallSliding", true);
             rb.velocity = new Vector2(rb.velocity.x, Mathf.Clamp(rb.velocity.y, -wallSlideSpeed, float.MaxValue));
         }
         else
@@ -192,7 +208,8 @@ public class PlayerMovement : MonoBehaviour
                 wallJumpTimer = 0;
             }
             isWallSliding = false;
-            
+            animator.SetBool("IsWallSliding", false);
+
         }
     }
 
@@ -213,10 +230,9 @@ public class PlayerMovement : MonoBehaviour
 
         if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow)) && wallJumpTimer > 0)
         {
-            Debug.Log("Applied Wall Jump");
             isWallJumping = true;
             rb.velocity = Vector2.zero;
-            rb.velocity = new Vector2(wallJumpDirection * wallJumpPower.x, wallJumpPower.y);
+            rb.velocity = new Vector2(Mathf.Clamp(wallJumpDirection, -1.0f, 1.0f) * wallJumpPower.x, wallJumpPower.y);
             wallJumpTimer = 0;
 
             if(transform.localScale.x != wallJumpDirection)
@@ -250,7 +266,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsPressedAgainstWall()
     {
-        return Physics2D.Raycast(wallCheckTransform.position, Vector2.right * transform.localScale.x, 0.02f, wallLayer);
+        Debug.DrawLine(wallCheckTransform.position, wallCheckTransform.position + ((Vector3.right * transform.localScale.x) * 0.1f));
+        return Physics2D.Raycast(wallCheckTransform.position, Vector2.right * transform.localScale.x, 0.1f, wallLayer);
     }
 
     public bool IsGrounded()
@@ -266,6 +283,29 @@ public class PlayerMovement : MonoBehaviour
             raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, extraHeightTest, GroundLayerMask);
         }
         return (raycastHit.collider != null && rb.velocity.y < 0.01f);
+    }
+
+    private void EnableMovement(object sender, PlayerMovementEventArgs EventArgs)
+    {
+        canMove = EventArgs.newPlayerMoveState;
+
+        if(!canMove)
+        {
+            Vector3 velocity = rb.velocity;
+            velocity.x = 0;
+            rb.velocity = velocity;
+        }
+        //Debug.Log("New Movement State is " + EventArgs.newPlayerMoveState);
+    }
+
+    private void OnEnable()
+    {
+        PlayerEvents.MovementActive += EnableMovement;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.MovementActive -= EnableMovement;
     }
 
 }

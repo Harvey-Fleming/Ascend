@@ -1,6 +1,7 @@
 using System.Collections;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
@@ -73,6 +74,18 @@ public class GameManager : MonoBehaviour
         yield return null;
     }
 
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+    }
+
     #region - Login
 
     IEnumerator LoginRoutine()
@@ -95,8 +108,6 @@ public class GameManager : MonoBehaviour
         yield return new WaitWhile(() => done == false);
     }
     #endregion
-
-
 
     #region - Score Section
 
@@ -167,5 +178,31 @@ public class GameManager : MonoBehaviour
 
     }
 
+    #endregion
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        LoadGame();
+    }
+
+    private void OnSceneUnloaded(Scene scene)
+    {
+
+    }
+
+    #region - Saving
+    public void SaveGame()
+    {
+#if !UNITY_WEBGL
+        SaveSystem.SavePlayer();
+#else
+        SaveSystem.SavePlayerPref();
+#endif
+    }
+
+    private void LoadGame()
+    {
+        GlobalEvents.OnLoadData();
+    }
     #endregion
 }

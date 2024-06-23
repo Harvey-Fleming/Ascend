@@ -18,7 +18,12 @@ public class PlayerHealth : MonoBehaviour
 
     public UnityEvent playerDeathEvent;
 
-    private void Start()
+    float[] savedPos;
+
+    public GameObject LastCheckpoint { get => lastCheckpoint; set => lastCheckpoint = value; }
+    public GameObject DefaultCheckpoint { get => defaultCheckpoint; set => defaultCheckpoint = value; }
+
+    private void Awake()
     {
         lastCheckpoint = defaultCheckpoint;
     }
@@ -40,6 +45,7 @@ public class PlayerHealth : MonoBehaviour
             lastCheckpoint.GetComponent<SpriteRenderer>().sprite = checkpointSprite1;
             lastCheckpoint = collision.gameObject;
             lastCheckpoint.GetComponent<SpriteRenderer>().sprite = checkpointSprite2;
+            GameManager.instance.SaveGame();
         }
         else if (collision.gameObject.tag == "DeathBox")
         {
@@ -77,5 +83,23 @@ public class PlayerHealth : MonoBehaviour
         {
             GravityPower.StaticActivate();
         }
+    }
+
+    public void LoadData(object sender, SaveEventArg saveArg)
+    {
+        //Load player next to last checkpoint
+        savedPos = new float[3];
+        savedPos = saveArg.playerData.lastCheckpointPos;
+        transform.position = new Vector3(savedPos[0], savedPos[1], savedPos[2]);
+    }
+
+    private void OnEnable()
+    {
+        GlobalEvents.LoadData += LoadData;
+    }
+
+    private void OnDisable()
+    {
+        GlobalEvents.LoadData -= LoadData;
     }
 }

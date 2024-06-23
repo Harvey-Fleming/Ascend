@@ -4,15 +4,25 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
     [SerializeField] GameObject pauseMenu;
+    [SerializeField] GameObject mainMenu;
 
-    bool isPaused = false;
+    [SerializeField] bool isPaused = false;
 
     public bool IsPaused { get => isPaused;}
 
     private void Start()
     {
-        isPaused = true;
-        Time.timeScale = 0;
+        if(mainMenu.activeInHierarchy)
+        {
+            isPaused = true;
+            Time.timeScale = 0;
+        }
+        else
+        {
+            GameObject.FindWithTag("Player").GetComponent<PlayerMovement>().enabled = true;
+            TimeManager.instance.StartTimer();
+        }
+
     }
 
     // Update is called once per frame
@@ -44,5 +54,15 @@ public class PlayerManager : MonoBehaviour
         isPaused = false;
         pauseMenu.SetActive(false);
         Time.timeScale = 1;
+    }
+
+    public void StopPlayerMovement()
+    {
+        PlayerEvents.OnMovementActive(false);
+    }
+
+    public void ResumePlayerMovement()
+    {
+        PlayerEvents.OnMovementActive(true);
     }
 }

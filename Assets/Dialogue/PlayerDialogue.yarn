@@ -1,14 +1,35 @@
 ﻿title: PlayerDialogue
 tags:
-position: -254,-60
+position: -303,-141
 ---
 
 ===
 
 title: entertower
 tags:
-position: 71,-54
+position: 79,-141
 ---
 Alright, I made it into the tower.
 Now I just need to find ... and get out.
 ===
+
+title: firstorb
+tags:
+position: -106,169
+---
+Huh?
+What's that strange orb?
+...
+I wanna touch it.
+===
+
+title: librarytopblocked
+tags:
+position: -106,169
+---
+Well..
+There is no way i'm making it up there!
+I wonder why this tower is so annoying to climb.
+===
+
+

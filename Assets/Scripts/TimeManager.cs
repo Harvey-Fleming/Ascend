@@ -65,7 +65,7 @@ public class TimeManager : MonoBehaviour
         }
     }
 
-    public void StartTImer()
+    public void StartTimer()
     {
         isRunning = true;
     }
