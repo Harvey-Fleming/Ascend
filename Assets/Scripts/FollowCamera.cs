@@ -6,15 +6,33 @@ public class FollowCamera : MonoBehaviour
 {
     [SerializeField] private GameObject target;
 
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private LayerMask groundLayerMask;
+
+    [SerializeField] Vector3 lowestPos;
+    [SerializeField] Vector3 HighestPos;
+
+    private void Update()
     {
-        
+        float xPos = Mathf.Clamp(target.transform.position.x, lowestPos.x, HighestPos.x);
+        float yPos = Mathf.Clamp(target.transform.position.y, lowestPos.y, HighestPos.y);
+        transform.position = new Vector3(xPos, yPos, transform.position.z);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        transform.position = new Vector3(target.transform.position.x, target.transform.position.y, transform.position.z);
+
+        //Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0f, 0f));
+
+        //Debug.DrawRay(ray.origin, ray.direction, Color.red, 1.0f);
+
+        //if(!Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, groundLayerMask))
+        //{
+        //    Debug.Log("Should go up");
+        //    transform.position += Vector3.up;
+        //}
+        //else if (Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity, groundLayerMask))
+        //{
+
+        //}
     }
 }

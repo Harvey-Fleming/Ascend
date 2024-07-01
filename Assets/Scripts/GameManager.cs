@@ -18,6 +18,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject leaderboardPrefab;
     [SerializeField] private Transform leaderboardParent;
 
+    [SerializeField] [Space] private bool shouldLoad;
+
     public int TotalTime { get => totalTime; set => totalTime = value; }
     public string leaderboardKey { get; private set; }
 
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    [Yarn.Unity.YarnCommand("FadeToBlack")]
     public void StartFadeToBlack()
     {
         Image blackImage = GameObject.Find("Black Screen Image").GetComponent<Image>();
@@ -56,6 +59,18 @@ public class GameManager : MonoBehaviour
         if(blackImage != null)
         {
             StartCoroutine(FadeToBlack(blackImage));
+
+        }
+    }
+
+    [Yarn.Unity.YarnCommand("FadeFromBlack")]
+    public void StartFadeFromBlack()
+    {
+        Image blackImage = GameObject.Find("Black Screen Image").GetComponent<Image>();
+
+        if (blackImage != null)
+        {
+            StartCoroutine(FadeFromBlack(blackImage));
 
         }
     }
@@ -70,7 +85,19 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, 1);
-        FindObjectOfType<FinalScreen>().OnShowScreen(FindObjectOfType<TimeManager>().GetTimer(), FindObjectOfType<CollectCoin>().CoinsGathered);
+        yield return null;
+    }
+
+    IEnumerator FadeFromBlack(Image blackImage)
+    {
+        float t = 0f;
+        while (blackImage.color.a >= 0.1)
+        {
+            t += 1 * Time.deltaTime;
+            blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, Mathf.Lerp(blackImage.color.a, 0, t));
+            yield return new WaitForSeconds(0.1f);
+        }
+        blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, 0);
         yield return null;
     }
 
@@ -193,16 +220,22 @@ public class GameManager : MonoBehaviour
     #region - Saving
     public void SaveGame()
     {
-#if !UNITY_WEBGL
-        SaveSystem.SavePlayer();
-#else
-        SaveSystem.SavePlayerPref();
-#endif
+        GlobalEvents.OnSaveData();
     }
 
     private void LoadGame()
     {
-        GlobalEvents.OnLoadData();
+        if(shouldLoad)
+        {
+            GlobalEvents.OnLoadData();
+        }
     }
+
+    public void NewGame()
+    {
+        SaveSystem.ClearSaveData();
+    }
+
+    
     #endregion
 }

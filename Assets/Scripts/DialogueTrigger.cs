@@ -9,6 +9,9 @@ public class DialogueTrigger : MonoBehaviour
 
     Yarn.Unity.DialogueRunner dialogueRunner;
 
+    public bool HasRan { get => hasRan; set => hasRan = value; }
+    public string NodeName { get => nodeName; set => nodeName = value; }
+
     // Start is called before the first frame update
     void Start()
     {

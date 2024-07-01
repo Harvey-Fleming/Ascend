@@ -10,6 +10,7 @@ TagManager:
   - Checkpoint
   - MusicPlayer
   - DeathBox
+  - Dialogue
   layers:
   - Default
   - TransparentFX

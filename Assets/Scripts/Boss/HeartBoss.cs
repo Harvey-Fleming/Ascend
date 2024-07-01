@@ -179,6 +179,7 @@ public class HeartBoss : MonoBehaviour
         FindObjectOfType<TimeManager>().StopTimer();
 
         GameManager.instance.StartFadeToBlack();
+        FindObjectOfType<FinalScreen>().OnShowScreen(FindObjectOfType<TimeManager>().GetTimer(), FindObjectOfType<CollectCoin>().CoinsGathered);
         GameManager.instance.SubmitScore();
     }
 

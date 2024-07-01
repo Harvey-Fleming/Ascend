@@ -2,17 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueData : MonoBehaviour
+[System.Serializable]
+public class DialogueData
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Dictionary<string, bool> hasDialogueRanDictionary;
 
-    // Update is called once per frame
-    void Update()
+    public DialogueData()
     {
-        
+        GameObject[] dialogueTriggers = GameObject.FindGameObjectsWithTag("Dialogue");
+
+        foreach(GameObject dialogueTrigger in dialogueTriggers)
+        {
+            DialogueTrigger triggerScript = dialogueTrigger.GetComponent<DialogueTrigger>();
+
+            hasDialogueRanDictionary.Add(triggerScript.NodeName, triggerScript.HasRan);
+        }
     }
 }

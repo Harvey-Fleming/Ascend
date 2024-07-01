@@ -44,6 +44,8 @@ public class PlayerMovement : MonoBehaviour
     private bool isInverse = false;
     private bool isBouncing = false;
     private bool canMove = true;
+    [SerializeField] private bool canWallJump = true;
+    [SerializeField] private bool canWallSlide = true;
     [Space]
     [SerializeField] private LayerMask GroundLayerMask;
 
@@ -124,14 +126,26 @@ public class PlayerMovement : MonoBehaviour
                 coyoteTimer = 0;
             }
 
-            WallSlide();
-            WallJump();
+            if(canWallSlide)
+                WallSlide();
+            if(canWallJump)
+                WallJump();
 
             if (!isWallJumping)
             {
                 Turn();
             } 
         }
+
+        if (!IsGrounded())
+        {
+            animator.SetBool("IsGrounded", false);
+        }
+        else
+        {
+            animator.SetBool("IsGrounded", true);
+        }
+
 
         animator.SetFloat("XSpeed", Mathf.Clamp01(Mathf.Abs(horizontalInput)));
         animator.SetFloat("YSpeed", Mathf.Clamp(rb.velocity.y, -1.0f, 1.0f));

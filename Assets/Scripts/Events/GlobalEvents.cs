@@ -2,17 +2,18 @@ using System;
 
 public static class GlobalEvents
 {
-    public static event EventHandler<SaveEventArg> SaveData;
+    //public static event EventHandler<SaveEventArg> SaveData;
 
-    public static void OnSaveData(PlayerData playerData)
+    public static void OnSaveData()
     {
 #if !UNITY_WEBGL
-        SaveData?.Invoke(null, new SaveEventArg(playerData));
+        SaveSystem.SavePlayer();
+        SaveSystem.SaveGameData();
 #else
-        //SaveData?.Invoke(null, new SaveEventArg(playerData));
-
+        SaveSystem.SavePlayerPref();
+        SaveSystem.SaveGamePref();
 #endif
-        
+
     }
 
     public static event EventHandler<SaveEventArg> LoadData;
@@ -21,10 +22,12 @@ public static class GlobalEvents
     {
 #if !UNITY_WEBGL
         PlayerData pData = SaveSystem.LoadPlayer();
-        LoadData?.Invoke(null, new SaveEventArg(pData));
+        GameData gData = SaveSystem.LoadGameData();
+        LoadData?.Invoke(null, new SaveEventArg(pData, gData));
 #else
         PlayerData pData = SaveSystem.LoadPlayerPref();
-        LoadData?.Invoke(null, new SaveEventArg(pData));
+        GameData gData = SaveSystem.LoadGamePref();
+        LoadData?.Invoke(null, new SaveEventArg(pData, gData));
 
 #endif
     }
@@ -34,10 +37,13 @@ public static class GlobalEvents
 public class SaveEventArg
 {
     public PlayerData playerData;
+    public GameData gameData;
+    public DialogueData dialogueData;
 
-    public SaveEventArg(PlayerData playerData)
+    public SaveEventArg(PlayerData playerData, GameData gameData)
     {
         this.playerData = playerData;
+        this.gameData = gameData;
     }
 
 }

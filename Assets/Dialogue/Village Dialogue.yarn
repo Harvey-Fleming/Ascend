@@ -1,0 +1,28 @@
+﻿title: Village_Dialogue
+tags:
+position: 129,-178
+---
+
+===
+
+title: intro
+tags:
+position: -195,-173
+---
+    My name is <color=\#0000FF>Cole</color>.
+    I am from a small fishing village at the base of the mountain called 
+    We live a simple life... 
+    At least we did until the evil wizard <color=\#ff0000>Nefarium</color> unleashed his evil army of constructs on the world.
+    <<FadeFromBlack GameManager>>
+    <<jump backtoVillage>>
+    
+===
+
+
+title: backtoVillage
+tags:
+position: -218,150
+---
+    It's getting late.
+    I should get back to the village.
+===
