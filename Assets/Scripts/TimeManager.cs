@@ -35,7 +35,7 @@ public class TimeManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isRunning)
+        if (isRunning && !GameObject.FindObjectOfType<Yarn.Unity.DialogueRunner>().IsDialogueRunning)
         {
             timer = timer.AddSeconds(1 * Time.deltaTime);
 

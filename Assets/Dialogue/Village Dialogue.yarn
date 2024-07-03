@@ -9,11 +9,15 @@ title: intro
 tags:
 position: -195,-173
 ---
+    <<FadeToBlack 10>>
     My name is <color=\#0000FF>Cole</color>.
-    I am from a small fishing village at the base of the mountain called 
+    I am from a small village at the base of a mountain called 
     We live a simple life... 
     At least we did until the evil wizard <color=\#ff0000>Nefarium</color> unleashed his evil army of constructs on the world.
-    <<FadeFromBlack GameManager>>
+    ...
+    But I'm getting ahead of myself. 
+    Let's start from the beginning.
+    <<FadeFromBlack 5>>
     <<jump backtoVillage>>
     
 ===

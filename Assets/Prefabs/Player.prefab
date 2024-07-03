@@ -153,7 +153,7 @@ Transform:
   m_GameObject: {fileID: 2338111744944973368}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.447, y: 0, z: 0}
+  m_LocalPosition: {x: 0.39998767, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -170,10 +170,10 @@ GameObject:
   - component: {fileID: 3266878277612419971}
   - component: {fileID: 4421432674052971210}
   - component: {fileID: 4661556541102378063}
+  - component: {fileID: 1782205126729478623}
+  - component: {fileID: 4937462112167732556}
   - component: {fileID: 4171192990268468688}
   - component: {fileID: 8291699331747581573}
-  - component: {fileID: 4937462112167732556}
-  - component: {fileID: 1782205126729478623}
   - component: {fileID: 2908402709281766837}
   m_Layer: 0
   m_Name: Player
@@ -286,6 +286,37 @@ MonoBehaviour:
   GroundLayerMask:
     serializedVersion: 2
     m_Bits: 8
+--- !u!114 &1782205126729478623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7118016666779145595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd5cab2d9d78c0b4bb505892dec62be0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultCheckpoint: {fileID: 0}
+  checkpointSprite1: {fileID: 1701300158, guid: 1afd6119c4e3138428fee4313683d0a7, type: 3}
+  checkpointSprite2: {fileID: -1261707036, guid: 1afd6119c4e3138428fee4313683d0a7, type: 3}
+  playerDeathEvent:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &4937462112167732556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7118016666779145595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c2542d86b277964e939de1f1ea5cd37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  counterText: {fileID: 0}
 --- !u!50 &4171192990268468688
 Rigidbody2D:
   serializedVersion: 4
@@ -345,7 +376,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.12}
+  m_Offset: {x: 0, y: 0.135}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.2}
@@ -358,37 +389,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 1.06}
   m_EdgeRadius: 0
---- !u!114 &4937462112167732556
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7118016666779145595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c2542d86b277964e939de1f1ea5cd37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  counterText: {fileID: 0}
---- !u!114 &1782205126729478623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7118016666779145595}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd5cab2d9d78c0b4bb505892dec62be0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultCheckpoint: {fileID: 0}
-  checkpointSprite1: {fileID: 1701300158, guid: 1afd6119c4e3138428fee4313683d0a7, type: 3}
-  checkpointSprite2: {fileID: -1261707036, guid: 1afd6119c4e3138428fee4313683d0a7, type: 3}
-  playerDeathEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!95 &2908402709281766837
 Animator:
   serializedVersion: 5

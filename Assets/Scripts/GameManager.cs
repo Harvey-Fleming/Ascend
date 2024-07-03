@@ -49,51 +49,46 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log(TimeManager.instance.Timer.Millisecond + TimeManager.instance.Timer.Second * 1000 + ((TimeManager.instance.Timer.Minute * 60) * 1000) + ((TimeManager.instance.Timer.Hour * 3600) * 1000));
         }
+
+
+    }
+
+    public void StartFadeToBlack()
+    {
+        StartCoroutine(FadeToBlack(1));
+    }
+
+
+    public void StartFadeFromBlack()
+    {
+        StartCoroutine(FadeFromBlack(1));
     }
 
     [Yarn.Unity.YarnCommand("FadeToBlack")]
-    public void StartFadeToBlack()
-    {
-        Image blackImage = GameObject.Find("Black Screen Image").GetComponent<Image>();
-
-        if(blackImage != null)
-        {
-            StartCoroutine(FadeToBlack(blackImage));
-
-        }
-    }
-
-    [Yarn.Unity.YarnCommand("FadeFromBlack")]
-    public void StartFadeFromBlack()
-    {
-        Image blackImage = GameObject.Find("Black Screen Image").GetComponent<Image>();
-
-        if (blackImage != null)
-        {
-            StartCoroutine(FadeFromBlack(blackImage));
-
-        }
-    }
-
-    IEnumerator FadeToBlack(Image blackImage)
+    public static IEnumerator FadeToBlack(int lerpSpeed)
     {
         float t = 0f;
+        Image blackImage = GameObject.Find("Black Screen Image").GetComponent<Image>();
         while (blackImage.color.a <= 0.9)
         {
-            t += 1 * Time.deltaTime;
+            t += lerpSpeed *Time.deltaTime;
+
             blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, Mathf.Lerp(blackImage.color.a, 1, t));
+            Debug.Log(blackImage.color.a);
             yield return new WaitForSeconds(0.1f);
         }
         blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, 1);
         yield return null;
     }
 
-    IEnumerator FadeFromBlack(Image blackImage)
+    [Yarn.Unity.YarnCommand("FadeFromBlack")]
+    public static IEnumerator FadeFromBlack(int lerpSpeed)
     {
         float t = 0f;
+        Image blackImage = GameObject.Find("Black Screen Image").GetComponent<Image>();
         while (blackImage.color.a >= 0.1)
         {
-            t += 1 * Time.deltaTime;
+            t += lerpSpeed * Time.deltaTime;
             blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, Mathf.Lerp(blackImage.color.a, 0, t));
             yield return new WaitForSeconds(0.1f);
         }

@@ -144,6 +144,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
             animator.SetBool("IsGrounded", true);
+            rb.velocity = new Vector2(rb.velocity.x, 0);
         }
 
 
@@ -188,6 +189,7 @@ public class PlayerMovement : MonoBehaviour
 
                     rb.AddForce(Vector2.right * -amount, ForceMode2D.Impulse);
                 }
+
             }
 
             #region Falling Gravity
@@ -209,7 +211,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void WallSlide()
     {
-        if (IsPressedAgainstWall() && !IsGrounded() && horizontalInput != 0 && rb.velocity.y <= 0 )
+        if (IsPressedAgainstWall() && !IsGrounded() && horizontalInput != 0 && rb.velocity.y <= 0)
         {
             isWallSliding = true;
             animator.SetBool("IsWallSliding", true);
@@ -280,8 +282,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsPressedAgainstWall()
     {
-        Debug.DrawLine(wallCheckTransform.position, wallCheckTransform.position + ((Vector3.right * transform.localScale.x) * 0.1f));
-        return Physics2D.Raycast(wallCheckTransform.position, Vector2.right * transform.localScale.x, 0.1f, wallLayer);
+        Debug.DrawLine(wallCheckTransform.position, wallCheckTransform.position + ((Vector3.right * transform.localScale.x) * 0.2f));
+        return Physics2D.Raycast(wallCheckTransform.position, Vector2.right * transform.localScale.x, 0.2f, wallLayer);
     }
 
     public bool IsGrounded()
