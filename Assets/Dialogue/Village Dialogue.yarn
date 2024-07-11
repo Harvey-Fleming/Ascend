@@ -1,6 +1,6 @@
 ﻿title: Village_Dialogue
 tags:
-position: 129,-178
+position: 449,-183
 ---
 
 ===
@@ -23,10 +23,44 @@ position: -195,-173
 ===
 
 
+
+
 title: backtoVillage
 tags:
-position: -218,150
+position: -217,150
 ---
     It's getting late.
     I should get back to the village.
+===
+
+title: talktofather
+position: 132,-176
+---
+    Father: Cole! 
+    Father: Where have you been?!
+    Father: It's getting late and you know how dangerous it's been outside the village.
+    Father: Especially with people disappearing recently.
+
+    -> Sorry
+    -> I'll be more careful next time
+    -> I understand
+
+    Father: Fine, now head to bed quickly before your mother wakes up.
+    <<FadeToBlack 5>>
+    <<jump wakeup>>
+===
+title: wakeup
+position: 143,154
+---
+    A few hours later...
+    Father: Cole.
+    Father: Cole!
+    Father: Get Up!
+    <<FadeFromBlack 5>>
+    You need to listen to me.
+    The village is under attack from all these stone creatures...
+    You need to head east out of the village, It's not safe here anymore.
+    I'll catch up when I can, I need to help the others.
+
+
 ===

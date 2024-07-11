@@ -9,6 +9,14 @@ public static class PlayerEvents
     {
         MovementActive?.Invoke(null, new PlayerMovementEventArgs(newPlayerMoveState));
     }
+
+    public static event EventHandler<PlayerDeathEventArgs> PlayerDeath;
+
+    public static void OnPlayerDeath(object sender, PlayerDeathEventArgs args)
+    {
+        Debug.Log("Player Death Event Triggered");
+        PlayerDeath?.Invoke(sender, args);
+    }
 }
 
 public class PlayerMovementEventArgs
@@ -21,4 +29,16 @@ public class PlayerMovementEventArgs
     }
     
 }
+
+public class PlayerDeathEventArgs
+{
+    public Checkpoint currentCheckpoint;
+
+    public PlayerDeathEventArgs(Checkpoint currentCheckpoint)
+    {
+        this.currentCheckpoint = currentCheckpoint;
+    }
+
+}
+
 

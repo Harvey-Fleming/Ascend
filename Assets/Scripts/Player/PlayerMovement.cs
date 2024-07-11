@@ -21,12 +21,11 @@ public class PlayerMovement : MonoBehaviour
     private float jumpBufferTimer = 0f;
     [SerializeField] private float maxJumpBufferTimer = 0.2f;
 
-
-
     [Header("Wall Jump/Slide")]
     [SerializeField] bool isWallSliding = false;
 
     [SerializeField] bool isWallJumping = false;
+    [SerializeField] bool isSpringJumping = false;
     [Space(10)]
     [SerializeField] float wallSlideSpeed = 2f;
 
@@ -55,7 +54,6 @@ public class PlayerMovement : MonoBehaviour
 
     private float horizontalInput;
 
-
     public float GravityScale { get => gravityScale; set => gravityScale = value; }
     public bool IsInverse { get => isInverse; set => isInverse = value; }
     public bool IsBouncing { get => isBouncing; set => isBouncing = value; }
@@ -72,10 +70,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        horizontalInput = Input.GetAxisRaw("Horizontal");
+
         if (canMove)
         {
-            horizontalInput = Input.GetAxisRaw("Horizontal");
-
+            #region Jumping
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 jumpBufferTimer = maxJumpBufferTimer;
@@ -111,7 +110,8 @@ public class PlayerMovement : MonoBehaviour
                 else
                     rb.AddForce(Vector2.up * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
 
-            }
+            } 
+            #endregion
 
             if (!IsGrounded())
             {
@@ -124,6 +124,7 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool("IsGrounded", true);
                 IsBouncing = false;
                 coyoteTimer = 0;
+                rb.velocity = new Vector2(rb.velocity.x, 0);
             }
 
             if(canWallSlide)
@@ -136,17 +137,6 @@ public class PlayerMovement : MonoBehaviour
                 Turn();
             } 
         }
-
-        if (!IsGrounded())
-        {
-            animator.SetBool("IsGrounded", false);
-        }
-        else
-        {
-            animator.SetBool("IsGrounded", true);
-            rb.velocity = new Vector2(rb.velocity.x, 0);
-        }
-
 
         animator.SetFloat("XSpeed", Mathf.Clamp01(Mathf.Abs(horizontalInput)));
         animator.SetFloat("YSpeed", Mathf.Clamp(rb.velocity.y, -1.0f, 1.0f));
@@ -172,13 +162,22 @@ public class PlayerMovement : MonoBehaviour
             else
                 accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? targetaccel * 0.5f : targetaccel * 0.5f;
 
+            if (Mathf.Abs(rb.velocity.x) > Mathf.Abs(targetSpeed) && Mathf.Sign(rb.velocity.x) == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f && coyoteTimer > maxCoyoteTimer)
+            {
+                //Prevent any deceleration from happening, or in other words conserve are current momentum
+                //You could experiment with allowing for the player to slightly increae their speed whilst in this "state"
+                accelRate = 0;
+            }
+
             //Calculate difference between current velocity and desired velocity
             float speedDif = targetSpeed - rb.velocity.x;
 
             //Calculate force along x-axis to apply to the player
             float movement = speedDif * accelRate;
 
-            if (!isWallJumping)
+
+
+            if (!isWallJumping && !isSpringJumping)
             {
                 //Convert this to a vector and apply to rigidbody
                 rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
@@ -267,6 +266,27 @@ public class PlayerMovement : MonoBehaviour
         isWallJumping = false;
     }
 
+    private void SpringJump(object sender, SpringEventArgs args)
+    {
+        if (isWallSliding || IsGrounded())
+        {
+            isSpringJumping = false;
+
+            CancelInvoke("StopSpringJump");
+        }
+
+        isSpringJumping = true;
+        rb.velocity = Vector2.zero;
+        rb.velocity = args.springPower;
+
+        Invoke("StopSpringJump", args.springDuration);
+    }
+
+    private void StopSpringJump()
+    {
+        isSpringJumping = false;
+    }
+
 
 
     private void Turn()
@@ -317,11 +337,13 @@ public class PlayerMovement : MonoBehaviour
     private void OnEnable()
     {
         PlayerEvents.MovementActive += EnableMovement;
+        Spring.SpringTriggered += SpringJump;
     }
 
     private void OnDisable()
     {
         PlayerEvents.MovementActive -= EnableMovement;
+        Spring.SpringTriggered -= SpringJump;
     }
 
 }

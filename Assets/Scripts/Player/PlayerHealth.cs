@@ -16,8 +16,6 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] Sprite checkpointSprite1;
     [SerializeField] Sprite checkpointSprite2;
 
-    public UnityEvent playerDeathEvent;
-
     float[] savedPos;
 
     public GameObject LastCheckpoint { get => lastCheckpoint; set => lastCheckpoint = value; }
@@ -31,7 +29,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Heart")
+        if(collision.gameObject.tag == "Heart" || collision.gameObject.tag == "Lava")
         {
             TakeDamage();
         }
@@ -47,7 +45,7 @@ public class PlayerHealth : MonoBehaviour
             lastCheckpoint.GetComponent<SpriteRenderer>().sprite = checkpointSprite2;
             GameManager.instance.SaveGame();
         }
-        else if (collision.gameObject.tag == "DeathBox")
+        else if (collision.gameObject.tag == "DeathBox" )
         {
             PlayerDeath();
         }
@@ -66,7 +64,7 @@ public class PlayerHealth : MonoBehaviour
     private void PlayerDeath()
     {
         Debug.Log("Player has died");
-        playerDeathEvent.Invoke();
+        PlayerEvents.OnPlayerDeath(this, new PlayerDeathEventArgs(lastCheckpoint.GetComponent<Checkpoint>()));
         Respawn();
     }
 

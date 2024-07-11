@@ -53,6 +53,12 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void LoadNextLevel()
+    {
+        if(SceneManager.GetActiveScene().buildIndex + 1 < SceneManager.sceneCountInBuildSettings )
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
     public void StartFadeToBlack()
     {
         StartCoroutine(FadeToBlack(1));

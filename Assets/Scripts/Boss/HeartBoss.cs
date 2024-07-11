@@ -48,24 +48,12 @@ public class HeartBoss : MonoBehaviour
         Death,
     }
 
-    private void Start()
-    {
-        FindObjectOfType<PlayerHealth>().playerDeathEvent.AddListener(ResetBoss);
-    }
-
     private void Update()
     {
         if(currentAttack == HeartState.idle && hasStarted)
         {
             NextAttack();
         }
-
-        //if (Input.GetKeyDown(KeyCode.J))
-        //{
-        //    StopCoroutine(beamAttack);
-        //    BeamPSys.Stop();
-        //    NextAttack();
-        //}
     }
 
     private void NextAttack()
@@ -183,7 +171,7 @@ public class HeartBoss : MonoBehaviour
         GameManager.instance.SubmitScore();
     }
 
-    public void ResetBoss()
+    public void ResetBoss(object sender, PlayerDeathEventArgs args)
     {
         if(hasStarted)
         {
@@ -217,5 +205,15 @@ public class HeartBoss : MonoBehaviour
             currentAttack = HeartState.idle;
         }
 
+    }
+
+    private void OnEnable()
+    {
+        PlayerEvents.PlayerDeath += ResetBoss;
+    }
+
+    private void OnDisable()
+    {
+        PlayerEvents.PlayerDeath -= ResetBoss;
     }
 }

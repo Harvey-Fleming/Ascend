@@ -11,6 +11,8 @@ TagManager:
   - MusicPlayer
   - DeathBox
   - Dialogue
+  - Lava
+  - Spring
   layers:
   - Default
   - TransparentFX
