@@ -43,16 +43,6 @@ public class GameManager : MonoBehaviour
         StartCoroutine(LoginRoutine());
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.L))
-        {
-            Debug.Log(TimeManager.instance.Timer.Millisecond + TimeManager.instance.Timer.Second * 1000 + ((TimeManager.instance.Timer.Minute * 60) * 1000) + ((TimeManager.instance.Timer.Hour * 3600) * 1000));
-        }
-
-
-    }
-
     public void LoadNextLevel()
     {
         if(SceneManager.GetActiveScene().buildIndex + 1 < SceneManager.sceneCountInBuildSettings )
@@ -80,7 +70,7 @@ public class GameManager : MonoBehaviour
             t += lerpSpeed *Time.deltaTime;
 
             blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, Mathf.Lerp(blackImage.color.a, 1, t));
-            Debug.Log(blackImage.color.a);
+            //Debug.Log(blackImage.color.a);
             yield return new WaitForSeconds(0.1f);
         }
         blackImage.color = new Color(blackImage.color.r, blackImage.color.g, blackImage.color.b, 1);

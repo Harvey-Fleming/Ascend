@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -7,10 +8,14 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float maxSpeed;
     [SerializeField] private float speedAcceleration = 1.0f;
 
+    Vector3 savedDebugPos;
+
 
     [Header("Gravity")]
     [SerializeField] private float fallGravityMultiplier = 1;
     [SerializeField] private float gravityScale = 1;
+    [SerializeField] private float maxFallSpeed = 15;
+    private float fallSpeedCameraDampThreshold;
 
 
     [Header("Jump")]
@@ -65,12 +70,23 @@ public class PlayerMovement : MonoBehaviour
         boxCollider = GetComponent<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+
+        fallSpeedCameraDampThreshold = CameraManager.instance.fallSpeedYDampChangeThreshold;
     }
 
     // Update is called once per frame
     void Update()
     {
         horizontalInput = Input.GetAxisRaw("Horizontal");
+
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            savedDebugPos = transform.position;
+        }
+        else if(Input.GetKeyDown(KeyCode.K))
+        {
+            transform.position = savedDebugPos;
+        }
 
         if (canMove)
         {
@@ -138,6 +154,18 @@ public class PlayerMovement : MonoBehaviour
             } 
         }
 
+        if(rb.velocity.y < fallSpeedCameraDampThreshold && !CameraManager.instance.IsLerpingYDamping && !CameraManager.instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.instance.LerpYDamping(true);
+        }
+
+        if(rb.velocity.y >= fallSpeedCameraDampThreshold && !CameraManager.instance.IsLerpingYDamping && CameraManager.instance.LerpedFromPlayerFalling)
+        {
+            CameraManager.instance.LerpedFromPlayerFalling = false;
+
+            CameraManager.instance.LerpYDamping(false);
+        }
+
         animator.SetFloat("XSpeed", Mathf.Clamp01(Mathf.Abs(horizontalInput)));
         animator.SetFloat("YSpeed", Mathf.Clamp(rb.velocity.y, -1.0f, 1.0f));
 
@@ -195,10 +223,12 @@ public class PlayerMovement : MonoBehaviour
             if (rb.velocity.y < 0 && !isInverse)
             {
                 rb.gravityScale = gravityScale * fallGravityMultiplier;
+                rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -maxFallSpeed));
             }
             else if (rb.velocity.y > 0 && isInverse)
             {
                 rb.gravityScale = gravityScale * fallGravityMultiplier;
+                rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, maxFallSpeed));
             }
             else
             {

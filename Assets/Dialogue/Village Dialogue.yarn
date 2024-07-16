@@ -1,10 +1,4 @@
-﻿title: Village_Dialogue
-tags:
-position: 449,-183
----
-
-===
-
+﻿
 title: intro
 tags:
 position: -195,-173
@@ -17,20 +11,21 @@ position: -195,-173
     ...
     But I'm getting ahead of myself. 
     Let's start from the beginning.
+    <<SpawnActor DialogueSystem Friend -250.5 -6.6 0>>
     <<FadeFromBlack 5>>
     <<jump backtoVillage>>
     
 ===
 
-
-
-
 title: backtoVillage
 tags:
 position: -217,150
 ---
+    <<Move Player -252.5 2 true>>
     It's getting late.
-    I should get back to the village.
+    Cole: We should get back to the village.
+    <<MoveToActor Friend Player 1 false>>
+    <<DestroyActor DialogueSystem Friend>>
 ===
 
 title: talktofather
@@ -46,9 +41,15 @@ position: 132,-176
     -> I understand
 
     Father: Fine, now head to bed quickly before your mother wakes up.
+    <<SpawnActorAt DialogueSystem Player Friend>>
+    <<MoveInDirection Friend 5 1 true>>
+    Friend: See you later, Cole.
+    <<MoveInDirection Friend 10 1 true>>
+    <<DestroyActor DialogueSystem Friend>>
     <<FadeToBlack 5>>
     <<jump wakeup>>
 ===
+
 title: wakeup
 position: 143,154
 ---
@@ -57,10 +58,63 @@ position: 143,154
     Father: Cole!
     Father: Get Up!
     <<FadeFromBlack 5>>
+    <<StartFire>>
     You need to listen to me.
     The village is under attack from all these stone creatures...
     You need to head east out of the village, It's not safe here anymore.
     I'll catch up when I can, I need to help the others.
 
+
+===
+
+title: mountaintalk
+position: 502,-188
+---
+    <<SpawnActorAt DialogueSystem Player Friend>>
+    <<MoveInDirection Friend 2 1 true>>
+    Friend: Let's take a rest.
+    ...
+    Friend: I can't believe this is happening.
+    ->Me neither
+    ->I can
+        How could you even say that?!
+    ->What were those things?
+        Friend: I have no idea..
+        Friend: Maybe they are responsible for all the people going missing recently
+    Friend: I hope everyone got out okay.
+    Friend: Let's wait here for everyone to catch up.
+    ...
+    <<SpawnActor DialogueSystem Nefarium 141.45 82.5 0>>
+    <<Fly Nefarium 129.59 74.5 0 1 false>>
+    ???: Oh, Lookey Here. One perfect candidate.
+    Cole: Who are you?!
+    ???: Ouch, I'm hurt the people of ... forgot about their dear old village wizard.
+    Nefarium: I am Nefarium, and I will be borrowing your friend.
+    <<FlyInDirection Friend 0 2 1 false>>
+    Friend: Ah! I can't move.
+    Cole: Put her down!
+    Nefarium: No, I don't think I will.
+    Friend: Cole, help!
+    Nefarium: and I was lying about the borrowing part if you didn't realise
+    Nefarium: See ya. Hahaha...
+    <<Fly2InDirection DialogueSystem Nefarium Friend 20 0 4 true>>
+    Cole: Get back here!
+    <<MoveInDirectionMethod DialogueSystem Player 20 3 true>>
+    <<FadeToBlack 2>>
+    <<CompleteLevel>>
+===
+
+title: enemytut
+position: 808,-189
+---
+    <<Move Player -93.37 1 true>>
+    <<SpawnActor DialogueSystem Friend -92.29 -4.59 0>>
+    Friend: Cole!
+    Friend: We need to leave.
+    Friend: My father said if you jump on the golem's heads, they temporarily shut down.
+    <<MoveToActor Friend Player 1 false>>
+    <<DestroyActor DialogueSystem Friend>>
+    <<Move Player -87.5 1 true>>
+    Friend: Looks like we'll need to give it a try!
 
 ===

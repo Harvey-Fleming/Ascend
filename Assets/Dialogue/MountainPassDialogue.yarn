@@ -1,0 +1,26 @@
+﻿title: MountainPassDialogue
+tags:
+---
+AH
+===
+
+
+title: mountainIntro
+position: 0,0
+---
+<<SpawnInitialOrbs Orb>>
+<<SpawnActor DialogueSystem Friend 3.5 -2.1 0>>
+<<SpawnActor DialogueSystem Nefarium 3.5 0.1 0>>
+<<Fly2InDirection DialogueSystem Friend Nefarium 27.5 0 3 true>>
+<<Move Player 27 5 true>>
+
+<<Fly2InDirection DialogueSystem Friend Nefarium 12 1.7 2 true>>
+
+//Player and Nefarium + Friend Enter while chasing
+
+//Nefarium + Friend fly to centre and through door
+
+//Wizard Seperates the crystals
+
+//Player has to get crystals
+===

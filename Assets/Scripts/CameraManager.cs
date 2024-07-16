@@ -2,10 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System;
 
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager instance { get; private set; }
+
+    [SerializeField] private float fallPanAmount = 0.25f;
+    [SerializeField] private float fallPanTime = 0.35f;
+    public float fallSpeedYDampChangeThreshold;
+    private float normalYPanAmount;
+
+    public bool IsLerpingYDamping { get; private set;}
+
+    public bool LerpedFromPlayerFalling { get; set; }
 
     GameObject player;
 
@@ -14,9 +24,10 @@ public class CameraManager : MonoBehaviour
     CinemachineVirtualCamera currentCamera;
 
     [SerializeField] CinemachineBrain cineBrain;
-    [SerializeField] CinemachineFramingTransposer framingTransposer;
+    CinemachineFramingTransposer framingTransposer;
 
     Coroutine panCameraRoutine;
+    Coroutine lerpYCameraRoutine;
 
     void Start()
     {
@@ -37,6 +48,7 @@ public class CameraManager : MonoBehaviour
                 currentCamera = camera;
 
                 framingTransposer = currentCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
+                normalYPanAmount = framingTransposer.m_YDamping;
             }
         }
     }
@@ -45,6 +57,45 @@ public class CameraManager : MonoBehaviour
     {
         framingTransposer.m_TrackedObjectOffset = new Vector3(Mathf.Sign(player.transform.localScale.x) > 0? 0.5f : -0.5f , framingTransposer.m_TrackedObjectOffset.y, framingTransposer.m_TrackedObjectOffset.z);
     }
+
+    #region - Y Damping
+    public void LerpYDamping(bool isPlayerFalling)
+    {
+        lerpYCameraRoutine = StartCoroutine(LerpYAction(isPlayerFalling));
+    }
+
+    private IEnumerator LerpYAction(bool isPlayerFalling)
+    {
+        IsLerpingYDamping = true;
+
+        float startDampAmount = framingTransposer.m_YDamping;
+        float endDampAmount = 0f;
+        
+
+        if(isPlayerFalling)
+        {
+            endDampAmount = fallPanAmount;
+            LerpedFromPlayerFalling = true;
+        }
+        else
+        {
+            endDampAmount = normalYPanAmount;
+        }
+
+        float elapsedTime = 0f;
+        while(elapsedTime < fallPanTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            float lerpedPanAmount = Mathf.Lerp(startDampAmount, endDampAmount, elapsedTime / fallPanTime);
+            framingTransposer.m_YDamping = lerpedPanAmount;
+
+            yield return null;
+        }
+
+        IsLerpingYDamping = false;
+    }
+    #endregion
 
     #region - Swap Main Camera
     public void SwapCamera(CinemachineVirtualCamera cameraFromLeft, CinemachineVirtualCamera cameraFromRight, Vector2 triggerExitDirection)
