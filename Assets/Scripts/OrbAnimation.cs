@@ -59,6 +59,28 @@ public class OrbAnimation : MonoBehaviour
         }
     }
 
+    void OnKeyCollected(object sender, KeyCollectEventArgs args)
+    {
+        if (args.parentDoor.name == "Final Door" && pedestalIncrement < pedestals.Length)
+        {
+            GameObject crystal = Instantiate(crystalPrefab, pedestals[pedestalIncrement].transform.GetChild(0).transform.position, Quaternion.identity, pedestals[pedestalIncrement].transform);
+            crystals.Add(crystal);
+            crystal.GetComponent<Collider2D>().enabled = false;
+
+            var child = new GameObject();
+            child.transform.parent = pedestals[pedestalIncrement].transform;
+
+            LineRenderer lightning = child.AddComponent<LineRenderer>();
+            lightningRenderers.Add(lightning);
+            lightning.SetPosition(0, crystal.transform.position);
+            lightning.SetPosition(1, this.transform.position);
+
+            List<Material> materials = new List<Material>() { lightningMat };
+            lightning.SetMaterials(materials);
+            pedestalIncrement++;
+        }
+    }
+
     [ContextMenu("Break Pedestal")]
     public void OnPedestalBreak()
     {
@@ -92,24 +114,6 @@ public class OrbAnimation : MonoBehaviour
         }
         crystals.Clear();
         yield return null;
-    }
-
-    void OnKeyCollected(object sender, KeyCollectEventArgs args)
-    {
-        if(args.parentDoor.name == "Final Door" && pedestalIncrement < pedestals.Length)
-        {
-            GameObject crystal = Instantiate(crystalPrefab, pedestals[pedestalIncrement].transform.GetChild(0).transform.position, Quaternion.identity, pedestals[pedestalIncrement].transform);
-            crystal.GetComponent<Collider2D>().enabled = false;
-
-            LineRenderer lightning = gameObject.AddComponent<LineRenderer>();
-            lightningRenderers.Add(lightning);
-            lightning.SetPosition(0, crystal.transform.position);
-            lightning.SetPosition(1, this.transform.position);
-
-            List<Material> materials = new List<Material>() { lightningMat };
-            lightning.SetMaterials(materials);
-            pedestalIncrement++;
-        }
     }
 
     private void OnEnable()

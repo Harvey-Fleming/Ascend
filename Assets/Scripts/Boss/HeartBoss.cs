@@ -168,7 +168,6 @@ public class HeartBoss : MonoBehaviour
 
         GameManager.instance.StartFadeToBlack();
         FindObjectOfType<FinalScreen>().OnShowScreen(FindObjectOfType<TimeManager>().GetTimer(), FindObjectOfType<CollectCoin>().CoinsGathered);
-        GameManager.instance.SubmitScore();
     }
 
     public void ResetBoss(object sender, PlayerDeathEventArgs args)

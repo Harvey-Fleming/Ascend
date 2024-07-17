@@ -16,6 +16,6 @@ public class FinalScreen : MonoBehaviour
         timerText.text = "You Finished in: " + timer.ToString("HH:mm:ss:fff");
         coinText.text = "You collected " + coinsCollected + " number of coins";
 
-        GameManager.instance.RetrieveTop10Scores();
+        
     }
 }
