@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Splines;
 using Yarn.Unity;
 
 public class DialogueEvents : MonoBehaviour
@@ -9,7 +10,6 @@ public class DialogueEvents : MonoBehaviour
     [SerializeField] List<GameObject> actors;
 
     List<GameObject> activeActors = new();
-
     #region - Move Commmands
     [YarnCommand("Move")]
     public static IEnumerator ForceMoveCoroutine(GameObject target, float newX, float duration, bool lookRight = true)
@@ -255,10 +255,6 @@ public class DialogueEvents : MonoBehaviour
     public static IEnumerator ForceFlyInDirCoroutine(GameObject target, float xDir, float yDir, float duration, bool lookRight = true)
     {
         Animator animator = target.GetComponent<Animator>();
-        if (animator != null)
-        {
-            Debug.Log(target.name + " Has an animator");
-        }
         Vector3 startPos = target.transform.position;
         Vector3 endPos = target.transform.position + new Vector3(xDir, yDir, 0.0f);
         float t = 0;
@@ -307,6 +303,32 @@ public class DialogueEvents : MonoBehaviour
         StartCoroutine(ForceFlyInDirCoroutine(target1, x, y, duration, lookright));
         StartCoroutine(ForceFlyInDirCoroutine(target2, x, y, duration, lookright));
     }
+
+    [YarnCommand("ChangeSpline")]
+    public static void ChangeSpline(GameObject target1, GameObject splineObject)
+    {
+        target1.GetComponent<SplineAnimate>().Container = splineObject.GetComponent<SplineContainer>();
+ 
+    }
+
+    [YarnCommand("ResetSpline")]
+    public static void ResetSpline(GameObject target1)
+    {
+        target1.GetComponent<SplineAnimate>().Restart(false);
+    }
+
+    [YarnCommand("FollowSpline")]
+    public static void FollowSpline(GameObject target1)
+    {
+        target1.GetComponent<SplineAnimate>().Play();
+    }
+
+    [YarnCommand("TeleportActor")]
+    public static void TeleportActor(GameObject target1, float x, float y, float z)
+    {
+        target1.transform.position = new Vector3(x, y, z);
+        
+    }
     #endregion
 
     #region - Spawn Actors
@@ -350,6 +372,21 @@ public class DialogueEvents : MonoBehaviour
     }
     #endregion
 
+    [YarnCommand("StartChase")]
+    public static void StartChase()
+    {
+        GameObject Friend = GameObject.Find("Friend");
+        GameObject Nefarium = GameObject.Find("Nefarium");
+
+        Friend.transform.SetParent(Nefarium.transform, true);
+        Friend.transform.localPosition = new Vector3(0f ,-0.444f, 0f);
+
+
+        Nefarium.GetComponent<SplineAnimate>().Container = GameObject.Find("NefariumChaseSpline").GetComponent<SplineContainer>();
+
+        GameObject.Find("ChaseManager").GetComponent<ChaseBehaviour>().OnBeginChase(new ChaseEventArgs(GameObject.Find("Nefarium"), GameObject.Find("Friend")));
+    }
+
     [YarnCommand("StartFire")]
     public static void StartFires()
     {
@@ -362,13 +399,8 @@ public class DialogueEvents : MonoBehaviour
     }
 
 
-    //public void ShootProjectile(float duration)
-    //{
-    //    StartCoroutine(MoveProjectile(duration));
-    //}
-
     [YarnCommand("ShootProjectile")]
-    public IEnumerator MoveProjectile(float duration)
+    public static IEnumerator MoveProjectile(float duration)
     {
         GameObject projectile = GameObject.Find("Projectile");
         Vector3 startPos = projectile.transform.position;
@@ -381,6 +413,16 @@ public class DialogueEvents : MonoBehaviour
         }
         projectile.transform.position = new Vector3(projectile.transform.position.x, 5, projectile.transform.position.z);
         GameObject.FindObjectOfType<OrbAnimation>().OnPedestalBreak();
+
+        Destroy(projectile);
+
+        GameObject Friend = GameObject.Find("Friend");
+        GameObject Nefarium = GameObject.Find("Nefarium");
+
+        Friend.transform.SetParent(null, true);
+
+        Nefarium.transform.position = new Vector3(45.66f, -11.59f, 0f);
+        Friend.transform.position = new Vector3(46.5f, -11.59f, 0f);
     }
 
     [YarnCommand("CompleteLevel")]

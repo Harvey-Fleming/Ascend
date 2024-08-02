@@ -125,8 +125,6 @@ public class CameraManager : MonoBehaviour
 
     public void ForceSwapCamera(CinemachineVirtualCamera newCamera)
     {
-        Debug.Log("Camera Force Swap");
-        Debug.Log("Current Camera was " + currentCamera.name);
         if(newCamera != currentCamera)
         {
             newCamera.enabled = true;
@@ -134,7 +132,6 @@ public class CameraManager : MonoBehaviour
             currentCamera.enabled = false;
 
             currentCamera = newCamera;
-            Debug.Log("Current Camera is now " + currentCamera.name);
 
             framingTransposer = currentCamera.GetCinemachineComponent<CinemachineFramingTransposer>();
         }

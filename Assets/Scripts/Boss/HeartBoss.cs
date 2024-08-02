@@ -48,6 +48,11 @@ public class HeartBoss : MonoBehaviour
         Death,
     }
 
+    private void Start()
+    {
+        
+    }
+
     private void Update()
     {
         if(currentAttack == HeartState.idle && hasStarted)
@@ -196,7 +201,7 @@ public class HeartBoss : MonoBehaviour
 
             foreach (BossLever lever in levers)
             {
-                lever.Reset();
+                lever.ResetLever();
             }
 
             hasStarted = false;

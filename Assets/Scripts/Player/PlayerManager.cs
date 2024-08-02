@@ -11,17 +11,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Start()
     {
-        if(mainMenu.activeInHierarchy)
-        {
-            isPaused = true;
-            Time.timeScale = 0;
-        }
-        else
-        {
-            GameObject.FindWithTag("Player").GetComponent<PlayerMovement>().enabled = true;
-            TimeManager.instance.StartTimer();
-        }
-
+        TimeManager.instance.StartTimer();
     }
 
     // Update is called once per frame

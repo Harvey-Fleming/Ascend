@@ -45,7 +45,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
-  - clipName: Tower Music
-    clip: {fileID: 8300000, guid: e59b5e2edd431484db5f84f13b8249e3, type: 3}
+  - clipName: VillageMusic
+    clip: {fileID: 8300000, guid: 1d56f540915e1774ab5c778f023f7d68, type: 3}
     volume: 1
+    shouldLoop: 1
     source: {fileID: 0}

@@ -33,6 +33,11 @@ public class PlayerHealth : MonoBehaviour
         {
             TakeDamage();
         }
+        else if (collision.gameObject.tag == "Spike" && Vector3.Dot((collision.gameObject.transform.position - transform.position).normalized, collision.gameObject.transform.up.normalized) < -0.01f)
+        {
+            Debug.Log("Hit Spike");
+            TakeDamage();
+        }
 
     }
 

@@ -9,6 +9,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
 
+    private float level = 0;
+
     [SerializeField] [Space] private bool shouldLoad;
 
     private void Awake()
@@ -23,11 +25,6 @@ public class GameManager : MonoBehaviour
             instance = this;
         }
 
-    }
-
-    private void Start()
-    {
-        AudioManager.instance.Play("VillageMusic");
     }
 
     public void LoadNextLevel()
@@ -94,6 +91,26 @@ public class GameManager : MonoBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         LoadGame();
+        level = scene.buildIndex;
+        switch(level)
+        {
+            case 0:
+                AudioManager.instance.Play("VillageMusic");
+                break;            
+            case 1:
+                AudioManager.instance.Play("VillageMusic");
+                break;            
+            case 2:
+                AudioManager.instance.Play("MountainMusic");
+                break;
+            case 3:
+                AudioManager.instance.Play("TowerMusic");
+                break;
+            case 4:
+                AudioManager.instance.Play("SkyMusic");
+                break;
+
+        }
     }
 
     private void OnSceneUnloaded(Scene scene)

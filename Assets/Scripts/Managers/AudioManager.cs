@@ -8,7 +8,7 @@ public class AudioManager : MonoBehaviour
 
     [SerializeField] Sound[] sounds;
 
-    void Start()
+    void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
         if(instance != null)
@@ -35,10 +35,14 @@ public class AudioManager : MonoBehaviour
         {
             if(clipName == sound.clipName)
             {
-                sound.source.Play();
+                if(!sound.source.isPlaying)
+                {
+                    sound.source.Play();
+                }
                 return;
             }
         }
+        Debug.LogWarning("Could not Find Clip: " + clipName);
     }
 }
 

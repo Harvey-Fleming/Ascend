@@ -10,20 +10,18 @@ position: 0,0
 ---
 //Player and Nefarium + Friend Enter while chasing
 <<SpawnInitialOrbs Orb>>
-<<SpawnActor DialogueSystem Friend 3.5 -2.1 0>>
-<<SpawnActor DialogueSystem Nefarium 3.5 0.1 0>>
-<<Fly2InDirection DialogueSystem Friend Nefarium 27.5 0 3 true>>
-<<Move Player 27 4 true>>
-
-<<Fly2InDirection DialogueSystem Friend Nefarium 12 1.7 2 true>>
+<<FollowSpline Nefarium>>
+<<Move Player 27 3.25 true>>
 
 //Nefarium + Friend fly to centre and through door
-Nefarium: Urgh.. Just stop following me.
+Nefarium: Urgh...
+Nefarium: Will you just stop following me.
 <<Fly2InDirection DialogueSystem Friend Nefarium 0 -10 1 true>>
-<<wait 0.5>>
+Nefarium: You won't be able to get past this! Ha Ha..
+<<wait 0.2>>
 
 //Wizard Seperates the crystals
-<<ShootProjectile DialogueSystem 1.5>>
+<<ShootProjectile 1.5>>
 <<wait 1.6>>
 
 //Player has to get crystals
@@ -34,4 +32,5 @@ title: chaseintro
 ---
     Nefarium: Will you just sit still while I tie you up...
     Nefarium: It will be much easier for both of us if you were still.
+    <<StartChase>>
 ===
