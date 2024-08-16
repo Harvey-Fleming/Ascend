@@ -372,21 +372,7 @@ public class DialogueEvents : MonoBehaviour
     }
     #endregion
 
-    [YarnCommand("StartChase")]
-    public static void StartChase()
-    {
-        GameObject Friend = GameObject.Find("Friend");
-        GameObject Nefarium = GameObject.Find("Nefarium");
-
-        Friend.transform.SetParent(Nefarium.transform, true);
-        Friend.transform.localPosition = new Vector3(0f ,-0.444f, 0f);
-
-
-        Nefarium.GetComponent<SplineAnimate>().Container = GameObject.Find("NefariumChaseSpline").GetComponent<SplineContainer>();
-
-        GameObject.Find("ChaseManager").GetComponent<ChaseBehaviour>().OnBeginChase(new ChaseEventArgs(GameObject.Find("Nefarium"), GameObject.Find("Friend")));
-    }
-
+    #region - Village Specific Dialogue Events
     [YarnCommand("StartFire")]
     public static void StartFires()
     {
@@ -397,7 +383,9 @@ public class DialogueEvents : MonoBehaviour
             child.gameObject.SetActive(true);
         }
     }
+    #endregion
 
+    #region - MaintainPass Specific Dialogue Events
 
     [YarnCommand("ShootProjectile")]
     public static IEnumerator MoveProjectile(float duration)
@@ -424,6 +412,31 @@ public class DialogueEvents : MonoBehaviour
         Nefarium.transform.position = new Vector3(45.66f, -11.59f, 0f);
         Friend.transform.position = new Vector3(46.5f, -11.59f, 0f);
     }
+
+    [YarnCommand("StartNefariumBoss")]
+    public static void StartFight()
+    {
+        GameObject.FindObjectOfType<NefariumBoss>().StartFight();
+
+    }
+
+
+    [YarnCommand("StartChase")]
+    public static void StartChase()
+    {
+        GameObject Friend = GameObject.Find("Friend");
+        GameObject Nefarium = GameObject.Find("Nefarium");
+
+        Friend.transform.SetParent(Nefarium.transform, true);
+        Friend.transform.localPosition = new Vector3(0f, -0.444f, 0f);
+
+
+        Nefarium.GetComponent<SplineAnimate>().Container = GameObject.Find("NefariumChaseSpline").GetComponent<SplineContainer>();
+
+        GameObject.Find("ChaseManager").GetComponent<ChaseBehaviour>().OnBeginChase(new ChaseEventArgs(GameObject.Find("Nefarium"), GameObject.Find("Friend")));
+    }
+
+    #endregion
 
     [YarnCommand("CompleteLevel")]
     public static void LoadNextLevel()

@@ -6,7 +6,7 @@ AH
 
 
 title: mountainIntro
-position: 0,0
+position: 255,0
 ---
 //Player and Nefarium + Friend Enter while chasing
 <<SpawnInitialOrbs Orb>>
@@ -29,8 +29,18 @@ Cole: No! I need to put those crystals back on the pedestals quickly.
 ===
 
 title: chaseintro
+position: -292,-15
 ---
     Nefarium: Will you just sit still while I tie you up...
     Nefarium: It will be much easier for both of us if you were still.
     <<StartChase>>
+===
+title: bossstart
+position: -293,185
+---
+<<Move Player 110 1 true>>
+Nefarium: I've had enough of you!
+Nefarium: I'll show you why you should reconsider messing with me.
+<<StartNefariumBoss>>
+
 ===

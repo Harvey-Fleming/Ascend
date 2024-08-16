@@ -38,6 +38,11 @@ public class PlayerHealth : MonoBehaviour
             Debug.Log("Hit Spike");
             TakeDamage();
         }
+        else if(collision.gameObject.tag == "Rock" )
+        {
+            Debug.Log("Hit Rock");
+            TakeDamage();
+        }
 
     }
 

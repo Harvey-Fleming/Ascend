@@ -5,9 +5,6 @@ using UnityEngine.Events;
 
 public class BossLever : MonoBehaviour
 {
-    [SerializeField] Sprite up;
-    [SerializeField] Sprite down;
-    SpriteRenderer sr;
 
     [SerializeField] GameObject leverPlatform;
 
@@ -15,20 +12,14 @@ public class BossLever : MonoBehaviour
     public UnityEvent leverFlipped;
     bool hasUsed;
 
-    private void Start()
-    {
-        sr = GetComponent<SpriteRenderer>();
-        sr.sprite = up;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player" && !hasUsed)
         {
             hasUsed = true;
             
-            sr.sprite = down;
-            if(leverPlatform != null)
+            GetComponent<Animator>().SetTrigger("On");
+            if (leverPlatform != null)
             {
                 leverPlatform.SetActive(true);
             }
@@ -45,7 +36,7 @@ public class BossLever : MonoBehaviour
     {
         yield return new WaitForSeconds(downTime);
         hasUsed = false;
-        sr.sprite = up;
+        GetComponent<Animator>().SetTrigger("Off");
         if (leverPlatform != null)
         {
             leverPlatform.SetActive(false);

@@ -21,14 +21,6 @@ public class GravityPower : MonoBehaviour, IPowerUp
     public void Activate()
     {
         isActive = true;
-        //if(Camera.main.transform.rotation.z == 0)
-        //{
-        //    Camera.main.transform.rotation = Quaternion.Euler(Camera.main.transform.rotation.x, Camera.main.transform.rotation.y, 180);
-        //}
-        //else
-        //{
-        //    Camera.main.transform.rotation = Quaternion.Euler(Camera.main.transform.rotation.x, Camera.main.transform.rotation.y, 0);
-        //}
         
         playerMovement.IsInverse = !playerMovement.IsInverse;
         playerMovement.GravityScale *= -1;
@@ -50,11 +42,6 @@ public class GravityPower : MonoBehaviour, IPowerUp
     {
         gameObject.transform.localScale = new Vector3(0, 0, 0);
         yield return new WaitForSeconds(Duration);
-        //playerMovement.isInverse = false;
-        //Camera.main.transform.rotation = Quaternion.Euler(Camera.main.transform.rotation.x, Camera.main.transform.rotation.y, 0);
-        //playerMovement.GravityScale *= -1;
-        //playerMovement.gameObject.transform.localScale = new Vector3(playerMovement.gameObject.transform.localScale.x, playerMovement.gameObject.transform.localScale.y * -1, playerMovement.gameObject.transform.localScale.z);
-
         isActive = false;
         gameObject.transform.localScale = new Vector3(1, 1, 1);
     }

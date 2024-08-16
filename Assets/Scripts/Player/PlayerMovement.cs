@@ -111,6 +111,7 @@ public class PlayerMovement : MonoBehaviour
                 }
                 else
                 {
+                    animator.SetTrigger("Jump");
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(Vector2.down * jumpForce, ForceMode2D.Impulse);
                 }
@@ -121,11 +122,7 @@ public class PlayerMovement : MonoBehaviour
             //Variable Jump Height
             if ((Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Space)) && !IsBouncing)
             {
-                if (!isInverse)
-                    rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
-                else
-                    rb.AddForce(Vector2.up * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
-
+                rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
             } 
             #endregion
 
@@ -137,6 +134,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
+                Debug.Log("Grounded");
                 animator.SetBool("IsGrounded", true);
                 IsBouncing = false;
                 coyoteTimer = 0;
@@ -167,7 +165,11 @@ public class PlayerMovement : MonoBehaviour
         }
 
         animator.SetFloat("XSpeed", Mathf.Clamp01(Mathf.Abs(horizontalInput)));
-        animator.SetFloat("YSpeed", Mathf.Clamp(rb.velocity.y, -1.0f, 1.0f));
+
+        if(!isInverse)
+            animator.SetFloat("YSpeed", Mathf.Clamp(rb.velocity.y, -1.0f, 1.0f));
+        else
+            animator.SetFloat("YSpeed", -Mathf.Clamp(rb.velocity.y, -1.0f, 1.0f));
 
     }
 
@@ -193,7 +195,6 @@ public class PlayerMovement : MonoBehaviour
             if (Mathf.Abs(rb.velocity.x) > Mathf.Abs(targetSpeed) && Mathf.Sign(rb.velocity.x) == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f && coyoteTimer > maxCoyoteTimer)
             {
                 //Prevent any deceleration from happening, or in other words conserve are current momentum
-                //You could experiment with allowing for the player to slightly increae their speed whilst in this "state"
                 accelRate = 0;
             }
 
@@ -228,11 +229,17 @@ public class PlayerMovement : MonoBehaviour
             else if (rb.velocity.y > 0 && isInverse)
             {
                 rb.gravityScale = gravityScale * fallGravityMultiplier;
-                rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, maxFallSpeed));
+                rb.velocity = new Vector2(rb.velocity.x, Mathf.Min(rb.velocity.y, maxFallSpeed));
             }
             else
             {
-                rb.gravityScale = gravityScale;
+                if (IsInverse)
+                {
+                    rb.gravityScale = -gravityScale;
+                }
+                {
+                    rb.gravityScale = gravityScale;
+                }          
             }
             #endregion 
         }
@@ -317,8 +324,6 @@ public class PlayerMovement : MonoBehaviour
         isSpringJumping = false;
     }
 
-
-
     private void Turn()
     {
         if((horizontalInput > 0 && transform.localScale.x < 0) || (horizontalInput < 0 && transform.localScale.x > 0))
@@ -348,7 +353,7 @@ public class PlayerMovement : MonoBehaviour
         {
             raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, extraHeightTest, GroundLayerMask);
         }
-        return (raycastHit.collider != null && rb.velocity.y < 0.01f);
+        return raycastHit.collider != null && (isInverse ? rb.velocity.y > 0f : rb.velocity.y < 0.01f);
     }
 
     private void EnableMovement(object sender, PlayerMovementEventArgs EventArgs)
