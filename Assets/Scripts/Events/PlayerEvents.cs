@@ -14,7 +14,6 @@ public static class PlayerEvents
 
     public static void OnPlayerDeath(object sender, PlayerDeathEventArgs args)
     {
-        Debug.Log("Player Death Event Triggered");
         PlayerDeath?.Invoke(sender, args);
     }
 }

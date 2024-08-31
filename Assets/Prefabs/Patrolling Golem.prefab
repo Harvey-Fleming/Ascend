@@ -8,6 +8,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5242892067996355318, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
+      propertyPath: m_Size.x
+      value: 2.1333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 5242892067996355318, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
+      propertyPath: m_Size.y
+      value: 2.1333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 5242892067996355318, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 468179252, guid: 1460b5b5dd50d6e498abb4b80c76a31a, type: 3}
+    - target: {fileID: 5242892067996355318, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5758387905812140413, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -103.5
@@ -62,6 +78,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8856002998248767913, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6554016724717726152}
+    - targetCorrespondingSourceObject: {fileID: 8856002998248767913, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1545027323447715369}
   m_SourcePrefab: {fileID: 100100000, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
 --- !u!1 &8135974069227322741 stripped
 GameObject:
@@ -80,8 +99,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42444e3e8fe73fa4f86db545d730ce27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolDistance: 0
-  moveSpeed: 0
+  patrolDistance: 3
+  rayDistance: 0.5
+  moveSpeed: 1
+  deactivationTime: 1.5
+  mask:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!61 &6554016724717726152
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -114,16 +138,37 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.12, y: -0.12}
+  m_Offset: {x: 0.11640167, y: -0.120000005}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 2.1333334, y: 2.1333334}
-    newSize: {x: 0.32, y: 0.32}
+    newSize: {x: 2.1333334, y: 2.1333334}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.42, y: 1.78}
+  m_Size: {x: 1.3569641, y: 1.78}
   m_EdgeRadius: 0
+--- !u!95 &1545027323447715369
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8135974069227322741}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0e7abf711dda63048ba37aa3711cc7a5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

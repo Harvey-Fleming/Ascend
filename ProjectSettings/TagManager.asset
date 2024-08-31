@@ -15,6 +15,7 @@ TagManager:
   - Spring
   - Spike
   - Rock
+  - Arrow
   layers:
   - Default
   - TransparentFX

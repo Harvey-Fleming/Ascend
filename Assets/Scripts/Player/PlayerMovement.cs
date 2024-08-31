@@ -25,6 +25,9 @@ public class PlayerMovement : MonoBehaviour
     private float coyoteTimer = 0f;
     private float jumpBufferTimer = 0f;
     [SerializeField] private float maxJumpBufferTimer = 0.2f;
+    [SerializeField] private int airJumpCounter = 1;
+
+    
 
     [Header("Wall Jump/Slide")]
     [SerializeField] bool isWallSliding = false;
@@ -48,8 +51,14 @@ public class PlayerMovement : MonoBehaviour
     private bool isInverse = false;
     private bool isBouncing = false;
     private bool canMove = true;
+
+    [Header("Ability States")]
     [SerializeField] private bool canWallJump = true;
     [SerializeField] private bool canWallSlide = true;
+    [SerializeField] private bool canDoubleJump = false;
+
+
+
     [Space]
     [SerializeField] private LayerMask GroundLayerMask;
 
@@ -123,7 +132,7 @@ public class PlayerMovement : MonoBehaviour
             if ((Input.GetKeyUp(KeyCode.UpArrow) || Input.GetKeyUp(KeyCode.Space)) && !IsBouncing)
             {
                 rb.AddForce(Vector2.down * rb.velocity.y * (1 - jumpCutModifier), ForceMode2D.Impulse);
-            } 
+            }  
             #endregion
 
             if (!IsGrounded())
@@ -131,13 +140,17 @@ public class PlayerMovement : MonoBehaviour
                 animator.SetBool("IsGrounded", false);
                 coyoteTimer += 1 * Time.deltaTime;
 
+                if((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow)) && coyoteTimer >= maxCoyoteTimer && airJumpCounter > 0 && canDoubleJump)
+                {
+                    AirJump();
+                }
             }
             else
             {
-                Debug.Log("Grounded");
                 animator.SetBool("IsGrounded", true);
                 IsBouncing = false;
                 coyoteTimer = 0;
+                airJumpCounter = 1;
                 rb.velocity = new Vector2(rb.velocity.x, 0);
             }
 
@@ -152,11 +165,11 @@ public class PlayerMovement : MonoBehaviour
             } 
         }
 
+        //if velocity is lower? than the threshold and not already looking ahead
         if(rb.velocity.y < fallSpeedCameraDampThreshold && !CameraManager.instance.IsLerpingYDamping && !CameraManager.instance.LerpedFromPlayerFalling)
         {
             CameraManager.instance.LerpYDamping(true);
         }
-
         if(rb.velocity.y >= fallSpeedCameraDampThreshold && !CameraManager.instance.IsLerpingYDamping && CameraManager.instance.LerpedFromPlayerFalling)
         {
             CameraManager.instance.LerpedFromPlayerFalling = false;
@@ -243,6 +256,21 @@ public class PlayerMovement : MonoBehaviour
             }
             #endregion 
         }
+    }
+
+    private void AirJump()
+    {
+        airJumpCounter = 0;
+        rb.velocity = new Vector2(rb.velocity.x, 0);
+        if (rb.GetComponent<PlayerMovement>().IsInverse)
+        {
+            rb.AddForce(Vector2.down * (jumpForce * 0.75f), ForceMode2D.Impulse);
+        }
+        else
+        {
+            rb.AddForce(Vector2.up * (jumpForce * 0.75f), ForceMode2D.Impulse);
+        }
+        IsBouncing = true;
     }
 
     private void WallSlide()

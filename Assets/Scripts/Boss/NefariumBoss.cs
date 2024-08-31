@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NefariumBoss : MonoBehaviour
+public class NefariumBoss : Boss
 {
     bool isActive = false;
 
@@ -14,21 +14,11 @@ public class NefariumBoss : MonoBehaviour
 
     [SerializeField] private GameObject rubbleParticles;
 
-    private float maxHealth = 3;
-    private float currentHealth = 3;
-
-
     public LayerMask BeamlayerMask { get => beamlayerMask; set => beamlayerMask = value; }
     public LayerMask PlayerMask { get => playerMask; set => playerMask = value; }
     public State CurrentState { get => currentState; set => currentState = value; }
     public float BeamSpeed { get => beamSpeed; set => beamSpeed = value; }
     public GameObject RubbleParticles { get => rubbleParticles; set => rubbleParticles = value; }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        currentHealth = maxHealth;
-    }
 
     // Update is called once per frame
     void Update()
@@ -58,7 +48,7 @@ public class NefariumBoss : MonoBehaviour
             {
                 //Take away health
                 Debug.Log("Nefarium Damage");
-                currentHealth--;
+                TakeDamage();
 
                 if(currentHealth <= 0)
                 {
@@ -85,33 +75,47 @@ public abstract class State : IState
 {
     public abstract void Execute();
 
-    protected NefariumBoss controller;
+    public abstract void EndState();
 
-    protected State(NefariumBoss controller)
+    protected Boss controller;
+
+    protected State(Boss controller)
     {
         this.controller = controller;
     }
+
+
 }
 
 public class NefariumIdleState : State
 {
-    public NefariumIdleState(NefariumBoss controller) : base(controller)
+    public NefariumIdleState(Boss controller) : base(controller)
     {
         Debug.Log("Idle State");
+    }
+
+    public override void EndState()
+    {
+        throw new System.NotImplementedException();
     }
 
     public override void Execute()
     {
         //controller.CurrentState = new NefariumBeamState(controller);
-        controller.CurrentState = new NefariumRockDropState(controller);
+        ((NefariumBoss)controller).CurrentState = new NefariumBeamState(controller);
     }
 }
 
 public class NefariumDeathState : State
 {
-    public NefariumDeathState(NefariumBoss controller) : base(controller)
+    public NefariumDeathState(Boss controller) : base(controller)
     {
         Debug.Log("Death State");
+    }
+
+    public override void EndState()
+    {
+        throw new System.NotImplementedException();
     }
 
     public override void Execute()
@@ -140,7 +144,7 @@ public class NefariumRockDropState : State
 
     List<GameObject> particles = new();
 
-    public NefariumRockDropState(NefariumBoss controller) : base(controller)
+    public NefariumRockDropState(Boss controller) : base(controller)
     {
         Debug.Log("RockDrop State");
         rockLeft = GameObject.Find("Boss Rubble Left");
@@ -149,8 +153,13 @@ public class NefariumRockDropState : State
         rockRight = GameObject.Find("Boss Rubble Right");
         rightRockBasePos = rockRight.transform.position;
 
-        particles.Add(GameObject.Instantiate(controller.RubbleParticles, rockLeft.transform.position, Quaternion.identity));
-        particles.Add(GameObject.Instantiate(controller.RubbleParticles, rockRight.transform.position, Quaternion.identity));
+        particles.Add(GameObject.Instantiate(((NefariumBoss)controller).RubbleParticles, rockLeft.transform.position, Quaternion.identity));
+        particles.Add(GameObject.Instantiate(((NefariumBoss)controller).RubbleParticles, rockRight.transform.position, Quaternion.identity));
+    }
+
+    public override void EndState()
+    {
+        throw new System.NotImplementedException();
     }
 
     public override void Execute()
@@ -179,7 +188,7 @@ public class NefariumRockDropState : State
                 {
                     rockLeft.transform.position = new Vector3(rockLeft.transform.position.x, 39, rockLeft.transform.position.z);
                     rockRight.transform.position = new Vector3(rockRight.transform.position.x, 38, rockRight.transform.position.z);
-                    controller.CurrentState = new NefariumIdleState(controller);
+                    ((NefariumBoss)controller).CurrentState = new NefariumIdleState(controller);
                 }
             }
             else
@@ -205,7 +214,7 @@ public class NefariumBeamState : State
     Coroutine beamAttack = null;
     
     private float beamCounter = 0f;
-    public NefariumBeamState(NefariumBoss controller) : base(controller)
+    public NefariumBeamState(Boss controller) : base(controller)
     {
         Debug.Log("Beam State");
         FlipColliderState();
@@ -252,14 +261,14 @@ public class NefariumBeamState : State
             RaycastHit2D hit; 
             Debug.DrawLine(controller.transform.position, controller.transform.position + v.normalized, Color.red, 0.5f);
 
-            if (hit = Physics2D.Raycast(controller.transform.position, v.normalized, Mathf.Infinity, controller.BeamlayerMask))
+            if (hit = Physics2D.Raycast(controller.transform.position, v.normalized, Mathf.Infinity, ((NefariumBoss)controller).BeamlayerMask))
             {
                 renderer.SetPosition(1, hit.point);
             }
 
             RaycastHit2D[] hitAll;
 
-            if ((hitAll = Physics2D.RaycastAll(controller.transform.position, v.normalized, 25, controller.PlayerMask)).Length != 0)
+            if ((hitAll = Physics2D.RaycastAll(controller.transform.position, v.normalized, 25, ((NefariumBoss)controller).PlayerMask)).Length != 0)
             {
                 GameObject closestObject = null;
                 float closestDistance = float.MaxValue;
@@ -290,13 +299,18 @@ public class NefariumBeamState : State
                 }
             }
 
-            beamCounter += controller.BeamSpeed * Time.deltaTime;
+            beamCounter += ((NefariumBoss)controller).BeamSpeed * Time.deltaTime;
             yield return new WaitForSeconds(0.15f);
         }
 
-        controller.CurrentState = new NefariumRockDropState(controller);
+        ((NefariumBoss)controller).CurrentState = new NefariumRockDropState(controller);
         FlipColliderState();
         beamAttack = null;
         yield return null;
+    }
+
+    public override void EndState()
+    {
+        throw new System.NotImplementedException();
     }
 }

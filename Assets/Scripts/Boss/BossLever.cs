@@ -3,43 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class BossLever : MonoBehaviour
+public class BossLever : Lever
 {
-
     [SerializeField] GameObject leverPlatform;
 
-    [SerializeField] float downTime = 1f;
     public UnityEvent leverFlipped;
-    bool hasUsed;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && !hasUsed)
+        if (collision.gameObject.tag == "Player" && !HasUsed)
         {
-            hasUsed = true;
-            
+            HasUsed = true;
             GetComponent<Animator>().SetTrigger("On");
             if (leverPlatform != null)
             {
                 leverPlatform.SetActive(true);
             }
+
+            leverFlipped?.Invoke();
             StartCoroutine(ResetLeverRoutine());
         }
     }
 
-    public void ResetLever()
+    public override IEnumerator ResetLeverRoutine()
     {
-        StartCoroutine(ResetLeverRoutine());
-    }
-
-    IEnumerator ResetLeverRoutine()
-    {
-        yield return new WaitForSeconds(downTime);
-        hasUsed = false;
-        GetComponent<Animator>().SetTrigger("Off");
+        yield return new WaitForSeconds(3f);
         if (leverPlatform != null)
         {
             leverPlatform.SetActive(false);
         }
+        StartCoroutine(base.ResetLeverRoutine());
+        yield return base.ResetLeverRoutine();
+
+
+        yield return null;
     }
 }

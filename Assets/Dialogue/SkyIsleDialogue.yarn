@@ -1,0 +1,15 @@
+﻿title: SkyIsleDialogue
+tags:
+---
+
+===
+
+title: bossphasewarning
+tags:
+---
+    <<Fly Player -143.5 173.4 0 2 true>>
+    Cole: Oh no! The floor is Rising, I need to move.
+    //<<JumpSlerp DialogueSystem Player -149 174.4 0 1>>
+    <<JumpInDirection Player 5 1 10>>
+    <<TriggerNextFinalBossPhase "Final Boss Controller">>
+===

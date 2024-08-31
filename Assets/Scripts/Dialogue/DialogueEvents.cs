@@ -331,6 +331,18 @@ public class DialogueEvents : MonoBehaviour
     }
     #endregion
 
+    #region - Jump Command
+    
+    [YarnCommand("JumpInDirection")]
+    public static void JumpInDirection(GameObject actor, float xDir, float yDir, float jumpPower)
+    {
+        if(actor.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb2d))
+        {
+            actor.GetComponent<Animator>().SetTrigger("Final Boss Jump");
+        }
+    }
+    #endregion
+
     #region - Spawn Actors
     [YarnCommand("SpawnActor")]
     public void SpawnActor(string actorName, float x, float y, float z)

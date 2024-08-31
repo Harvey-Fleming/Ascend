@@ -13,12 +13,13 @@ public class Enemy : MonoBehaviour
 
     Coroutine deactivationCoroutine;
     BoxCollider2D boxCollider;
+    Animator animator;
 
 
     // Start is called before the first frame update
     void Start()
     {
-
+        animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();
     }
 
@@ -36,14 +37,14 @@ public class Enemy : MonoBehaviour
 
             if (hitInfo.collider == null)
             {
-                Debug.Log("Did not Hit Down");
+                //Debug.Log("Did not Hit Down");
                 moveSpeed *= -1;
                 transform.localScale = new Vector2(Mathf.Sign(moveSpeed), 1);
             }
 
             if (hitInfo2.collider != null)
             {
-                Debug.Log("Hit " + hitInfo2.collider.name + " with tag " + hitInfo2.collider.tag + " Sideways");
+                //Debug.Log("Hit " + hitInfo2.collider.name + " with tag " + hitInfo2.collider.tag + " Sideways");
                 moveSpeed *= -1;
                 transform.localScale = new Vector2(Mathf.Sign(moveSpeed), 1);
             }
@@ -72,6 +73,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator Deactivate()
     {
+        animator.SetBool("IsActivated", false);
         float elapsedTime = 0f;
         while(elapsedTime < deactivationTime)
         {
@@ -80,7 +82,7 @@ public class Enemy : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return new WaitForEndOfFrame();
         }
-
+        animator.SetBool("IsActivated", true);
         boxCollider.enabled = true;
         deactivationCoroutine = null;
         yield return null;

@@ -88,7 +88,6 @@ public class HeartBoss : MonoBehaviour
         beamShape.rotation = beamRot;
 
         BeamPSys.Play();
-        Debug.Log(beamSpeed);
         while(BeamPSys.shape.rotation.x < 360)
         {
             beamShape = BeamPSys.shape;

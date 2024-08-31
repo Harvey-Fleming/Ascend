@@ -29,18 +29,13 @@ public class PlayerHealth : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.gameObject.tag == "Heart" || collision.gameObject.tag == "Lava")
+        if(collision.gameObject.tag == "Heart" || collision.gameObject.tag == "Lava" || collision.gameObject.tag == "Rock" || collision.gameObject.tag == "Arrow")
         {
             TakeDamage();
         }
         else if (collision.gameObject.tag == "Spike" && Vector3.Dot((collision.gameObject.transform.position - transform.position).normalized, collision.gameObject.transform.up.normalized) < -0.01f)
         {
             Debug.Log("Hit Spike");
-            TakeDamage();
-        }
-        else if(collision.gameObject.tag == "Rock" )
-        {
-            Debug.Log("Hit Rock");
             TakeDamage();
         }
 

@@ -267,12 +267,14 @@ MonoBehaviour:
   speedAcceleration: 13
   fallGravityMultiplier: 3
   gravityScale: 2
+  maxFallSpeed: 15
   jumpForce: 13
   maxCoyoteTimer: 0.15
   jumpCutModifier: 0.5
   maxJumpBufferTimer: 0.2
   isWallSliding: 0
   isWallJumping: 0
+  isSpringJumping: 0
   wallSlideSpeed: 2
   wallJumpPower: {x: 8, y: 13}
   maxWallJumpTimer: 0.2
@@ -301,9 +303,6 @@ MonoBehaviour:
   defaultCheckpoint: {fileID: 0}
   checkpointSprite1: {fileID: 1701300158, guid: 1afd6119c4e3138428fee4313683d0a7, type: 3}
   checkpointSprite2: {fileID: -1261707036, guid: 1afd6119c4e3138428fee4313683d0a7, type: 3}
-  playerDeathEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &4937462112167732556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,7 +401,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 77d1284f80f34de47b24e69ee6229d4d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
