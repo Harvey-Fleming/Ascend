@@ -12,7 +12,7 @@ public class Boss : MonoBehaviour
     {
         currentHealth = maxHealth;
     }
-
+    [ContextMenu("Damage Boss")]
     public virtual void TakeDamage()
     {
         currentHealth--;

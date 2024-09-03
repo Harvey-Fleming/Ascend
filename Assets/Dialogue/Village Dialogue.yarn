@@ -5,7 +5,7 @@ position: -195,-173
 ---
     <<FadeToBlack 10>>
     My name is <color=\#0000FF>Cole</color>.
-    I am from a small village at the base of a mountain called 
+    I come from a small village at the base of a mountain called Woodspire.
     We live a simple life... 
     At least we did until the evil wizard <color=\#ff0000>Nefarium</color> unleashed his evil army of constructs on the world.
     ...
@@ -21,8 +21,15 @@ title: backtoVillage
 tags:
 position: -217,150
 ---
+    Friend: It's always so nice out here.
+    Cole: It really is..
+    Cole: Far away from the noise of the village, it almost feels like my troubles just melt away.
+    Friend: The world has been pretty crazy recently.
+    Friend: People going missing,
+    Friend: Less mechants coming into town,
+    Friend: and that curfew your father imposed on all the children.
     <<Move Player -252.5 2 true>>
-    It's getting late.
+    Cole: Speaking of which, It's getting late.
     Cole: We should get back to the village.
     <<MoveToActor Friend Player 1 false>>
     <<DestroyActor DialogueSystem Friend>>
@@ -60,9 +67,10 @@ position: 143,154
     <<FadeFromBlack 5>>
     <<StartFire>>
     You need to listen to me.
-    The village is under attack from all these stone creatures...
+    These strange Stone creatures are attacking the village...
     You need to head east out of the village, It's not safe here anymore.
-    I'll catch up when I can, I need to help the others.
+    I'll catch up when I can, I need to help your mother and make sure everyone gets out safe.
+    <<DestroyActor DialogueSystem Father>>
 
 
 ===
@@ -76,20 +84,23 @@ position: 502,-188
     ...
     Friend: I can't believe this is happening.
     ->Me neither
-    ->I can
-        How could you even say that?!
+        Friend: I hope everyone got out okay.
+    ->I hope everyone is okay
+        Friend: Me too.
+        Friend: but with your father there, i'm sure everyone's okay.
     ->What were those things?
         Friend: I have no idea..
         Friend: Maybe they are responsible for all the people going missing recently
-    Friend: I hope everyone got out okay.
+        Friend: I hope everyone got out okay.
+    
     Friend: Let's wait here for everyone to catch up.
     ...
     <<SpawnActor DialogueSystem Nefarium 141.45 82.5 0>>
     <<Fly Nefarium 129.59 74.5 0 1 false>>
     ???: Oh, Lookey Here. One perfect candidate.
     Cole: Who are you?!
-    ???: Ouch, I'm hurt the people of ... forgot about their dear old village wizard.
-    Nefarium: I am Nefarium, and I will be borrowing your friend.
+    ???: Ouch, I'm hurt the people of Woodspire forgot about their dear old village wizard.
+    Nefarium: I am <color=\#ff0000>Nefarium</color>, and I will be borrowing your friend.
     <<FlyInDirection Friend 0 2 1 false>>
     Friend: Ah! I can't move.
     Cole: Put her down!
@@ -117,4 +128,22 @@ position: 808,-189
     <<Move Player -87.5 1 true>>
     Friend: Looks like we'll need to give it a try!
 
+===
+title: firstcoin
+position: -495,-177
+---
+    There are many of these strange coins throughout the land,
+    Finding <color=\#0000FF>3</color> of them will earn you an extra life.
+===
+
+title: playerdeath
+position: -494,30
+---
+<<FadeToBlack 10>>
+    You have been defeated...
+    Restart from the beginning of the level?
+    -> Yes
+        <<ReloadLevel>>
+    -> No, return to menu
+        <<LoadLevel 0>>
 ===

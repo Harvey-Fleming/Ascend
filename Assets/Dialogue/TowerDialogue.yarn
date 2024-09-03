@@ -1,0 +1,91 @@
+﻿title: TowerDialogue
+tags:
+position: 12,-237
+---
+
+===
+
+title: entertower
+tags:
+position: 14,-99
+---
+Cole: Alright, I made it into the tower.
+Cole: Now I just need to find where he's keeping the people from the village and get out before he notices.
+===
+
+title: firstorb
+tags:
+position: -220,-99
+---
+Cole: Huh?
+Floating above you is a green orb that radiates a magical aura.
+Cole: What's that strange orb?
+...
+Cole: I wanna touch it.
+===
+
+title: librarytopblocked
+tags:
+position: 247,-96
+---
+Cole: Well..
+Cole: There is no way i'm making it up there!
+Cole: I wonder why this tower is so annoying to climb.
+===
+
+title: firstcageencounter
+position: 14,50
+---
+    Familiar Voice: Cole!
+    Familiar Voice: It's us, from the village!
+    You look up and spy some Familiar faces from the village locked in cages.
+    Friend: Dad!
+    Friend's Dad: It's good to see you two.
+    Friend's Dad: Cole, your father is further up the tower, probably with Nefarium himself.
+    Friend's Dad: Nefarium is doing some strange magic here and he's punishing your dad for destroying a bunch of his golems.
+    Friend's Dad: I saw Nefarium give his key to one of those golems, so it must be around here somewhere.
+
+===
+
+title: heartprefight
+position: 531,-239
+---
+    Father: You won't get away with this Nefarium!
+    Nefarium: And what makes you think you can stop me?
+    Father: I may not be able to stop you, but there will always be people who will stand against you.
+    Nefarium: Is that so?
+
+   Cole: Father!
+   Father: Cole, what are you doing here?!
+   Father: I thought I told you to go somewhere safe.
+   Cole: It's a long story but I came to help everyone from the village.
+   Cole: We managed to get everyone out..
+   Father: That's good son.
+   Father: but you need to leave, this machine Nefarium has made is too powerful.
+   Nefarium: How very touching, father and son reunited, but I must correct you on one thing.
+   Nefarium: I didn't make this machine..
+   Nefarium: I don't even know where it came from, it found me and promised world domination in exchange for souls of the living to feed it's golem army.
+   Nefarium: Okay, I'm tired of speaking now..
+   Nefarium: Heart! Do your thing!
+   The omninous machine in the middle of the room spins to life and looks at you will malice.
+   <<StartHeartFight "Boss1 Trigger">>
+===
+
+title: heartpostfight
+position: 531,-72
+---
+    Nefarium: You little, meddling, irritating child have been in my way this entire time.
+    Nefarium: And I will not let my goals be undone by some random child.
+
+    //Room begins to shake
+    Nefarium waves his wand and channels a spell that causes the whole room to shake
+    //Screen shake needed here
+
+    //Nefarium begins ripping the room apart and the top section of the tower floats into the sky
+    Father: Cole, Hold onto something!
+
+    //Nefarium and the Heart Fly Away to the final boss room, leaving cole and his father to chat and catch up...
+    Nefarium and the heart dissapear behind the clouds, leaving you and your father in silence.
+    <<FadeToBlack 5>>
+    <<CompleteLevel>>
+===

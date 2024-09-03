@@ -4,8 +4,15 @@ tags:
 AH
 ===
 
+title: mountainlevelstart
+position: -567,-1
+---
+    I need to find this <color=\#ff0000>Nefarium</color> guy and get my friend back.
+    My father said these mines became too dangerous, which is why they stopped using them, so I should be careful.
+===
 
-title: mountainIntro
+
+title: orbbreak
 position: 255,0
 ---
 //Player and Nefarium + Friend Enter while chasing
@@ -15,32 +22,72 @@ position: 255,0
 
 //Nefarium + Friend fly to centre and through door
 Nefarium: Urgh...
-Nefarium: Will you just stop following me.
+Nefarium: Well, if you're so insistent on following, try following after this
 <<Fly2InDirection DialogueSystem Friend Nefarium 0 -10 1 true>>
-Nefarium: You won't be able to get past this! Ha Ha..
-<<wait 0.2>>
-
+<<wait 0.4>>
 //Wizard Seperates the crystals
 <<ShootProjectile 1.5>>
-<<wait 1.6>>
+Nefarium: You won't be able to get past this! Ha Ha..
 
 //Player has to get crystals
 Cole: No! I need to put those crystals back on the pedestals quickly.
 ===
 
 title: chaseintro
-position: -292,-15
+position: -288,-2
 ---
     Nefarium: Will you just sit still while I tie you up...
     Nefarium: It will be much easier for both of us if you were still.
+    ...
+    Nefarium: AH
+    Nefarium: You actually made it through?!
+    Nefarium: No matter, catch us if you can!
     <<StartChase>>
 ===
+
 title: bossstart
 position: -293,185
 ---
+<<SpawnActor DialogueSystem Friend 110 38 0>>
 <<Move Player 110 1 true>>
-Nefarium: I've had enough of you!
+Cole: Let my friend go, <color=\#ff0000>Nefarium</color>!
+Nefarium: I've had quite enough of you!
 Nefarium: I'll show you why you should reconsider messing with me.
 <<StartNefariumBoss>>
 
 ===
+
+title: bossend
+position: -291,349
+--- 
+    <<DestroyActor DialogueSystem Nefarium>>
+    <<SpawnActor DialogueSystem Nefarium 110 31 0>>
+    Nefarium: Fine, have your friend back!
+    Nefarium: My golems already caprtured enough people from your village to satisfy our needs...
+
+    Nefarium: See you never!
+    <<TeleportActor Nefarium 110 31 0 >>
+    <<FlyInDirection Nefarium 0 20 2 true>>
+    <<wait 1>>
+    Friend: Oh thank you Cole, I was so scared.
+    Cole: No Problem. 
+    Cole: You would do the same for me.
+    ...
+    Friend: He said he has taken people from the village.. Do you think he has our parents too?
+    -> Maybe
+    -> It's possible
+    -> I really hope not
+    Friend: Regardless, and I know it's not my place to say but..
+    Friend: You really seemed to hold your own there.
+    Friend: Maybe you could help everyone!
+    -> I don't know if I can do that
+        Friend: You just took <color=\#ff0000>Nefarium</color> down.
+        Friend: If anyone can do it, you can Cole!
+        Friend: I believe in you.       
+    -> I think you're right
+    -> I'll do it
+    Cole: Okay, Let's go have a look and see from there
+    <<CompleteLevel>>
+===
+
+

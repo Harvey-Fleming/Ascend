@@ -17,7 +17,7 @@ public class FinalBossLever : Lever
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.CompareTag("Player") && !HasUsed)
+        if(collision.gameObject.CompareTag("Player") && !HasUsed && GameObject.FindObjectOfType<FinalBoss>().IsActive)
         {
             HasUsed = true;
             GetComponent<Animator>().SetTrigger("On");

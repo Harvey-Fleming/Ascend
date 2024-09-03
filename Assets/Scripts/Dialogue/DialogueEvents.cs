@@ -381,6 +381,10 @@ public class DialogueEvents : MonoBehaviour
             activeActors.Remove(actor);
             Destroy(actor);
         }
+        else
+        {
+            Destroy(actor);
+        }
     }
     #endregion
 
@@ -454,6 +458,17 @@ public class DialogueEvents : MonoBehaviour
     public static void LoadNextLevel()
     {
         GameManager.instance.LoadNextLevel();
+    }
+    [YarnCommand("ReloadLevel")]
+    public static void ReloadLevel()
+    {
+        GameManager.instance.ReloadLevel();
+    }
+
+    [YarnCommand("LoadLevel")]
+    public static void LoadLevel(int index)
+    {
+        GameManager.instance.LoadLevel(index);
     }
 
 

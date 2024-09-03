@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Yarn.Unity;
 
 public class HeartBossTrigger : MonoBehaviour
 {
@@ -13,23 +14,29 @@ public class HeartBossTrigger : MonoBehaviour
         {
             if(!hasStarted)
             {
-                hasStarted = true;
-                Camera.main.orthographicSize = 10;
-                Vector3 camlocalPos = Camera.main.transform.localPosition;
-                camlocalPos.y += 5;
-                Camera.main.transform.localPosition = camlocalPos;
+                GameObject.FindObjectOfType<DialogueRunner>().StartDialogue("heartprefight");
 
-                HeartBoss hboss = FindObjectOfType<HeartBoss>();
-                hboss.StartFight();
-
-                bossBlockingPlatform.SetActive(true);
-
-                if(FindObjectOfType<PlayerMovement>().IsInverse)
-                {
-                    GravityPower.StaticActivate();
-                }
-                
             }
+        }
+    }
+
+    [YarnCommand("StartHeartFight")]
+    public void StartHeartBoss()
+    {
+        hasStarted = true;
+        Camera.main.orthographicSize = 10;
+        Vector3 camlocalPos = Camera.main.transform.localPosition;
+        camlocalPos.y += 5;
+        Camera.main.transform.localPosition = camlocalPos;
+
+        HeartBoss hboss = FindObjectOfType<HeartBoss>();
+        hboss.StartFight();
+
+        bossBlockingPlatform.SetActive(true);
+
+        if (FindObjectOfType<PlayerMovement>().IsInverse)
+        {
+            GravityPower.StaticActivate();
         }
     }
 

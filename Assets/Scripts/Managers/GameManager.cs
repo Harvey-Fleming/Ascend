@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using Yarn.Unity;
 
 public class GameManager : MonoBehaviour
 {
@@ -33,6 +34,16 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
+    public void ReloadLevel()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void LoadLevel(int buildIndex)
+    {
+        SceneManager.LoadScene(buildIndex);
+    }
+
     public void StartFadeToBlack()
     {
         StartCoroutine(FadeToBlack(1));
@@ -44,7 +55,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeFromBlack(1));
     }
 
-    [Yarn.Unity.YarnCommand("FadeToBlack")]
+    [YarnCommand("FadeToBlack")]
     public static IEnumerator FadeToBlack(int lerpSpeed)
     {
         float t = 0f;
@@ -61,7 +72,7 @@ public class GameManager : MonoBehaviour
         yield return null;
     }
 
-    [Yarn.Unity.YarnCommand("FadeFromBlack")]
+    [YarnCommand("FadeFromBlack")]
     public static IEnumerator FadeFromBlack(int lerpSpeed)
     {
         float t = 0f;

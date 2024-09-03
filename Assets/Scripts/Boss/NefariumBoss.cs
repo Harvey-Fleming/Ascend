@@ -40,6 +40,16 @@ public class NefariumBoss : Boss
 
     }
 
+    public override void TakeDamage()
+    {
+        base.TakeDamage();
+
+        if (currentHealth <= 0)
+        {
+            currentState = new NefariumDeathState(this);
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
@@ -49,11 +59,6 @@ public class NefariumBoss : Boss
                 //Take away health
                 Debug.Log("Nefarium Damage");
                 TakeDamage();
-
-                if(currentHealth <= 0)
-                {
-                    currentState = new NefariumDeathState(this);
-                }
             }
             else
             {
@@ -111,16 +116,17 @@ public class NefariumDeathState : State
     public NefariumDeathState(Boss controller) : base(controller)
     {
         Debug.Log("Death State");
+        controller.GetComponent<SpriteRenderer>().enabled = false;
+        controller.GetComponent<Collider2D>().enabled = false;
+        GameObject.FindObjectOfType<Yarn.Unity.DialogueRunner>().StartDialogue("bossend");
     }
 
     public override void EndState()
     {
-        throw new System.NotImplementedException();
     }
 
     public override void Execute()
     {
-        GameManager.instance.LoadNextLevel();
     }
 }
 
@@ -179,8 +185,6 @@ public class NefariumRockDropState : State
                 }
                 exitT += Time.deltaTime;
 
-                Debug.Log("Base Pos " + leftRockBasePos); 
-                Debug.Log("Going To " + (leftRockBasePos - (Vector3.up * 14.5f)));
                 rockLeft.transform.position = Vector3.Lerp(leftRockBasePos, leftRockBasePos - (Vector3.up * 14.5f), exitT / 2);
                 rockRight.transform.position = Vector3.Lerp(rightRockBasePos, rightRockBasePos - (Vector3.up * 14.5f), exitT / 2);
 

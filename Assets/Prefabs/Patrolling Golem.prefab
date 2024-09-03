@@ -81,6 +81,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8856002998248767913, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1545027323447715369}
+    - targetCorrespondingSourceObject: {fileID: 8856002998248767913, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4077361391790040558}
   m_SourcePrefab: {fileID: 100100000, guid: b8569ea6511c32f48bc40a955785235d, type: 3}
 --- !u!1 &8135974069227322741 stripped
 GameObject:
@@ -99,13 +102,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42444e3e8fe73fa4f86db545d730ce27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolDistance: 3
-  rayDistance: 0.5
-  moveSpeed: 1
-  deactivationTime: 1.5
-  mask:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!61 &6554016724717726152
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -172,3 +168,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4077361391790040558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8135974069227322741}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c8feb8fb2f691c47aae41a9469cdc97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patrolDistance: 5
+  rayDistance: 0.35
+  moveSpeed: 1
+  deactivationTime: 1.5
+  mask:
+    serializedVersion: 2
+    m_Bits: 8

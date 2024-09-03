@@ -3,11 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
 using UnityEngine;
+using TMPro;
 
 public class PlayerHealth : MonoBehaviour
 {
     int health = 1;
     int maxHealth = 1;
+
+    int lives = 3;
+    [SerializeField] private TMP_Text liveText;
 
     GameObject lastCheckpoint;
 
@@ -24,6 +28,7 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         lastCheckpoint = defaultCheckpoint;
+        UpdateLives();
     }
 
 
@@ -70,7 +75,31 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player has died");
         PlayerEvents.OnPlayerDeath(this, new PlayerDeathEventArgs(lastCheckpoint.GetComponent<Checkpoint>()));
-        Respawn();
+        lives--;
+        if(lives > 0)
+        {
+            AudioManager.instance.Play("playerdeath");
+            UpdateLives();
+            Respawn();
+        }
+        else
+        {
+            //Show Game Over Dialogue
+            if(!GameObject.FindObjectOfType<Yarn.Unity.DialogueRunner>().IsDialogueRunning)
+                GameObject.FindObjectOfType<Yarn.Unity.DialogueRunner>().StartDialogue("playerdeath");
+        }
+        
+    }
+
+    public void AddLives(int lives)
+    {
+        this.lives += lives;
+        UpdateLives();
+    }
+
+    private void UpdateLives()
+    {
+        liveText.text = lives.ToString();
     }
 
     private void Respawn()
@@ -105,4 +134,5 @@ public class PlayerHealth : MonoBehaviour
     {
         GlobalEvents.LoadData -= LoadData;
     }
+
 }

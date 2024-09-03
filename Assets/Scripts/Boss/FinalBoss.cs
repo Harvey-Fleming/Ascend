@@ -21,23 +21,25 @@ public class FinalBoss : Boss
 
     #region - Arrow Variables
     [Header("Arrow Attack")]
+
     [Tooltip("Minimum Position for arrows shooting across the screen (Left to Right)")]
-    [SerializeField] private Vector3 hMinPos = Vector3.zero;
+    [SerializeField] private Transform hMin;
     [Tooltip("Maximum Position for arrows shooting across the screen (Left to Right)")]
-    [SerializeField] private Vector3 hMaxPos = Vector3.zero;
+    [SerializeField] private Transform hMax;
     [Tooltip("Minimum Position for arrows shooting down the screen (Top to Bottom)")]
-    [SerializeField] private Vector3 vMinPos = Vector3.zero;
+    [SerializeField] private Transform vMin;
     [Tooltip("Maximum Position for arrows shooting down the screen (Top to Bottom)")]
-    [SerializeField] private Vector3 vMaxPos = Vector3.zero;
+    [SerializeField] private Transform vMax;
+
 
     [Space]
     [SerializeField] private GameObject arrowPrefab;
 
     public GameObject ArrowPrefab { get => arrowPrefab; set => arrowPrefab = value; }
-    public Vector3 HMinPos { get => hMinPos; set => hMinPos = value; }
-    public Vector3 HMaxPos { get => hMaxPos; set => hMaxPos = value; }
-    public Vector3 VMinPos { get => vMinPos; set => vMinPos = value; }
-    public Vector3 VMaxPos { get => vMaxPos; set => vMaxPos = value; }
+    public Transform HMin { get => hMin; set => hMin = value; }
+    public Transform HMax { get => hMax; set => hMax = value; }
+    public Transform VMin { get => vMin; set => vMin = value; }
+    public Transform VMax { get => vMax; set => vMax = value; }
 
     #endregion
 
@@ -52,6 +54,8 @@ public class FinalBoss : Boss
     [SerializeField] LayerMask playerMask;
     [SerializeField] private float beamSpeed = 10f;
 
+
+
     public LayerMask BeamlayerMask { get => beamlayerMask; set => beamlayerMask = value; }
     public LayerMask PlayerMask { get => playerMask; set => playerMask = value; }
     public float BeamSpeed { get => beamSpeed; set => beamSpeed = value; }
@@ -60,6 +64,7 @@ public class FinalBoss : Boss
     public Coroutine Beam2 { get => beam2; set => beam2 = value; }
     public Coroutine Beam3 { get => beam3; set => beam3 = value; }
     public Coroutine Beam4 { get => beam4; set => beam4 = value; }
+    public bool IsActive { get => isActive; set => isActive = value; }
 
 
 
@@ -82,11 +87,14 @@ public class FinalBoss : Boss
     }
 
     [ContextMenu("Start Fight")]
+    [YarnCommand("StartFinalBoss")]
     public void StartFight()
     {
         if (!isActive)
         {
             isActive = true;
+            GameObject.Find("Boss Door").GetComponent<Animator>().SetTrigger("CloseFinalDoor");
+            currentState.EndState();
             currentState = new FinalIdleState(this);
         }
 
@@ -122,7 +130,7 @@ public class FinalBoss : Boss
         ResetLevers?.Invoke();
     }
 
-    [ContextMenu("Hit Boss")]
+
     public override void TakeDamage()
     {
         StopAllCoroutines();
@@ -130,7 +138,14 @@ public class FinalBoss : Boss
 
         if(currentHealth == maxHealth - 1)
         {         
-            //GameObject.FindObjectOfType<DialogueRunner>().StartDialogue("bossphasewarning");
+            GameObject.FindObjectOfType<DialogueRunner>().StartDialogue("bossphasewarning");
+        }
+
+        if(currentHealth <= 0)
+        {
+            currentState.EndState();
+            currentState = new FinalDeathState(this);
+            GameObject.FindObjectOfType<DialogueRunner>().StartDialogue("postfinalboss");
         }
 
         ResetLeverDictionary();
@@ -139,6 +154,7 @@ public class FinalBoss : Boss
     [YarnCommand("TriggerNextFinalBossPhase")]
     public void TriggerNextPhase()
     {
+        currentState.EndState();
         currentState = new FinalSprayState(this, currentState);
         phase = 2;
     }
@@ -164,6 +180,24 @@ public class FinalIdleState : State
     public override void Execute()
     {
         ((FinalBoss)controller).CurrentState = new FinalArrowState(controller);
+    }
+}
+
+public class FinalDeathState : State
+{
+    public FinalDeathState(Boss controller) : base(controller)
+    {
+
+    }
+
+    public override void EndState()
+    {
+        
+    }
+
+    public override void Execute()
+    {
+        
     }
 }
 
@@ -259,7 +293,6 @@ public class FinalBeamsState : State
             else
                 beamCounter += (((FinalBoss)controller).BeamSpeed * 1.25f) * 0.15f;
             yield return new WaitForSeconds(0.15f);
-            //yield return new WaitForEndOfFrame();
         }
         renderer.enabled = false;
         ((FinalBoss)controller).CurrentState = new FinalArrowState(controller);
@@ -309,7 +342,7 @@ public class FinalArrowState : State
     private void SpawnVerticalArrows(Boss controller)
     {
         FinalBoss boss = ((FinalBoss)controller);
-        SpawnArrows(180f, boss.VMinPos, boss.VMaxPos);
+        SpawnArrows(180f, boss.VMin.position, boss.VMax.position);
 
         boss.StartCoroutine(ShootArrows(Vector3.down));
     }
@@ -317,7 +350,7 @@ public class FinalArrowState : State
     private void SpawnHorizontalArrows()
     {
         hasShotHorizontal = true;
-        SpawnArrows(-90, boss.HMinPos, boss.HMaxPos);
+        SpawnArrows(-90, boss.HMin.position, boss.HMax.position);
 
         boss.StartCoroutine(ShootArrows(Vector3.right));
     }

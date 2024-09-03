@@ -1,13 +1,87 @@
 ﻿title: SkyIsleDialogue
 tags:
+position: -197,144
 ---
 
 ===
 
+title: skyIntro
+position: -7,-211
+---
+    Father: Great job, Cole!
+    Father: You really showed him who's boss.
+    -> Thanks
+    -> It was no sweat
+        Father: That's my son
+    -> Do you think he'll come back?
+        Father: Maybe not our village but he definitely will terrorize the other villages.
+    Father: Let's take a minute to get our breath back.
+    ...
+    Father: Your mother is safe. I asked one of the merchants that was fleeing to take her and some of the villagers to some of my family a little ways away.
+    -> That's good
+    -> I'm glad
+    Father: I know I don't say it enough but I really appreciate your help with taking care of your mother..
+    Father: I'm sure it's not easy for you.
+    -> It's fine, you're so busy with helping the village after all
+    -> It has been quite hard
+    -> It's lonely, since you're not around as often
+    Father: When we get back, I will make sure I put aside more time to help out and spend time as a family.
+    ...
+    Cole: About that...
+    You gesture downwards to your father as you both realize you are currently thousands of feet in the air.
+    Father: That's a bit of a problem, isn't it?
+    Cole: It sure is.
+    Cole: We're going to have to chase Nefarium, aren't we?
+    Father: I think so..
+    Father: But let's be careful and watch out, one slip up here could be fatal.
+
+===
+
+title: prefinalboss
+position: 257,-44
+---
+    Cole: Alright Nefarium, you have no where to go now
+    Nefarium: Ha Ha
+    Nefarium: I am not the one cornered but you on the other hand...
+
+    An arc of shadows connects Nefarium and the machine.
+
+    //Nefarium Drifts towards the heart before fusing to form the Omega Heart
+    <<Fly Nefarium 72.5 217.5 0 2 false>>
+
+    Nefarium?: I feel the power of the heart coursing through me. Now just try and stop me... Cole.
+    <<StartFinalBoss "Final Boss Controller">>
+===
+
+
+title: postfinalboss
+position: 256,132
+---
+    Nefarium: Noooooo!
+    //Machine Disappears and Nefarium is launched into the sky.
+    The floor twists and shakes and Nefarium is ejected from the machine.
+    <<FlyInDirection Nefarium 0 20 1 true>>
+    And in the next instance, the machines dissapears in a burst of light.
+
+    //The floating pieces of land begin to fall and eventually land in a body of water.
+
+    //Cole and his Father exchange a few words and head home.
+
+    <<FadeToBlack 5>>
+    
+    //At home, Cole, his father, his friend and his mother share a warm meal.
+
+    //Fin
+
+
+===
+
+
 title: bossphasewarning
 tags:
+position: -202,-45
 ---
-    <<Fly Player -143.5 173.4 0 2 true>>
+    <<Fly Player 72.5 209.5 0 2 true>>
     Cole: Oh no! The floor is Rising, I need to move.
     //<<JumpSlerp DialogueSystem Player -149 174.4 0 1>>
     <<JumpInDirection Player 5 1 10>>

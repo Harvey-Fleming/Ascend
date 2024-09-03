@@ -33,6 +33,8 @@ public class ChaseBehaviour : MonoBehaviour
             waypoints.Add(knot);
         }
 
+        Debug.Log(waypoints.Count);
+
         while (ischasing)
         {
             Vector3 knotPos = new Vector3(waypoints[currentKnot].Position.x, waypoints[currentKnot].Position.y, waypoints[currentKnot].Position.z) + args.Nefarium.GetComponent<SplineAnimate>().Container.gameObject.transform.position;
@@ -45,17 +47,19 @@ public class ChaseBehaviour : MonoBehaviour
             }
             else 
             {
-                if (Vector3.Distance(GameObject.Find("Player").transform.position, args.Nefarium.transform.position) <= 3)
+                if (Vector3.Distance(GameObject.Find("Player").transform.position, args.Nefarium.transform.position) <= 3 || currentKnot + 1 == waypoints.Count)
                 {
                     chaseCounter = 0f;
                     currentKnot++;
+                    Debug.Log("Current knot is currently " + currentKnot);
                     NefariumBasePos = args.Nefarium.transform.position;
+                }
 
-                    if(currentKnot >= waypoints.Count)
-                    {
-                        ischasing = false;
-                        Debug.Log("Chase finished");
-                    }
+                if (currentKnot + 1 > waypoints.Count)
+                {
+                    ischasing = false;
+                    GameObject.FindObjectOfType<DialogueEvents>().DestroyActor("Nefarium");
+                    Debug.Log("Chase finished");
                 }
             }
 
