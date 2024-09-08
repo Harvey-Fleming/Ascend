@@ -18,7 +18,7 @@ public class CollectCoin : MonoBehaviour
             if(isFirstCollect)
             {
                 isFirstCollect = false;
-                GameObject.FindObjectOfType<Yarn.Unity.DialogueRunner>().StartDialogue("firstcoin");            
+                //GameObject.FindObjectOfType<Yarn.Unity.DialogueRunner>().StartDialogue("firstcoin");            
             }
             coinsGathered++;
             AudioManager.instance.Play("CollectCoin");

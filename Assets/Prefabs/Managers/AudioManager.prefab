@@ -45,19 +45,44 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
+  - clipName: MainMenuMusic
+    clip: {fileID: 8300000, guid: a2d1000e69636b048b0c8e3ec95ef4de, type: 3}
+    volume: 0.05
+    shouldLoop: 1
+    source: {fileID: 0}
   - clipName: VillageMusic
-    clip: {fileID: 8300000, guid: 1d56f540915e1774ab5c778f023f7d68, type: 3}
-    volume: 1
+    clip: {fileID: 8300000, guid: 4fc11b0930c55134db2cb362e92d7ef3, type: 3}
+    volume: 0.15
+    shouldLoop: 1
+    source: {fileID: 0}
+  - clipName: VillageSecondMusic
+    clip: {fileID: 8300000, guid: 2667b9ed8470f02499d8c4bad95c1021, type: 3}
+    volume: 0.05
+    shouldLoop: 1
+    source: {fileID: 0}
+  - clipName: MountainMusic
+    clip: {fileID: 8300000, guid: 5b8b345abf12a4546aa1ce4ff7b70286, type: 3}
+    volume: 0.05
+    shouldLoop: 1
+    source: {fileID: 0}
+  - clipName: TowerMusic
+    clip: {fileID: 8300000, guid: 2ad982b229497254ba37786199cca3c0, type: 3}
+    volume: 0.05
+    shouldLoop: 1
+    source: {fileID: 0}
+  - clipName: SkyMusic
+    clip: {fileID: 8300000, guid: b4f07e1d5031db64ab4df361addb8b8c, type: 3}
+    volume: 0.15
     shouldLoop: 1
     source: {fileID: 0}
   - clipName: UIClick
     clip: {fileID: 8300000, guid: 1123fdb8d142dab488ee785975d453fe, type: 3}
-    volume: 0.35
+    volume: 0.15
     shouldLoop: 0
     source: {fileID: 0}
   - clipName: UIReturn
     clip: {fileID: 8300000, guid: dc8085567c3e0014e89b2bebee494b02, type: 3}
-    volume: 0.35
+    volume: 0.15
     shouldLoop: 0
     source: {fileID: 0}
   - clipName: CollectCoin
@@ -69,11 +94,6 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 873e253456c67cc49b52b1acc029b84d, type: 3}
     volume: 0.35
     shouldLoop: 0
-    source: {fileID: 0}
-  - clipName: MountainMusic
-    clip: {fileID: 8300000, guid: 5b8b345abf12a4546aa1ce4ff7b70286, type: 3}
-    volume: 0.05
-    shouldLoop: 1
     source: {fileID: 0}
   - clipName: gameover
     clip: {fileID: 8300000, guid: 317720b27915b4d46ac6683194d2aea8, type: 3}

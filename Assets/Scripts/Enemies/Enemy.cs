@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
     protected Animator animator;
 
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<BoxCollider2D>();

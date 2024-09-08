@@ -106,7 +106,7 @@ public class GameManager : MonoBehaviour
         switch(level)
         {
             case 0:
-                AudioManager.instance.Play("VillageMusic");
+                AudioManager.instance.Play("MainMenuMusic");
                 break;            
             case 1:
                 AudioManager.instance.Play("VillageMusic");

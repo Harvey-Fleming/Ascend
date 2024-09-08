@@ -10,6 +10,8 @@ public class PlayerHealth : MonoBehaviour
     int health = 1;
     int maxHealth = 1;
 
+    bool hasTakenDamage = false;
+
     int lives = 3;
     [SerializeField] private TMP_Text liveText;
 
@@ -31,17 +33,22 @@ public class PlayerHealth : MonoBehaviour
         UpdateLives();
     }
 
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Update()
     {
-        if(collision.gameObject.tag == "Heart" || collision.gameObject.tag == "Lava" || collision.gameObject.tag == "Rock" || collision.gameObject.tag == "Arrow")
+        if(hasTakenDamage)
         {
             TakeDamage();
         }
-        else if (collision.gameObject.tag == "Spike" && Vector3.Dot((collision.gameObject.transform.position - transform.position).normalized, collision.gameObject.transform.up.normalized) < -0.01f)
+    }
+
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if((collision.gameObject.tag == "Heart" || collision.gameObject.tag == "Lava" || collision.gameObject.tag == "Rock" || collision.gameObject.tag == "Arrow" || (collision.gameObject.tag == "Spike" && Vector3.Dot((collision.gameObject.transform.position - transform.position).normalized, collision.gameObject.transform.up.normalized) < -0.01f)) && !hasTakenDamage)
         {
-            Debug.Log("Hit Spike");
-            TakeDamage();
+            Debug.Log("Hit Deadly object");
+            hasTakenDamage = true;
+            
         }
 
     }
@@ -104,18 +111,24 @@ public class PlayerHealth : MonoBehaviour
 
     private void Respawn()
     {
-        health = maxHealth;
+        
         if(lastCheckpoint == null)
         {
             lastCheckpoint = defaultCheckpoint;
         }
         transform.position = lastCheckpoint.transform.position;
+        
 
-        if(GetComponent<PlayerMovement>().IsInverse)
+        health = maxHealth;
+        hasTakenDamage = false;
+
+        if (GetComponent<PlayerMovement>().IsInverse)
         {
             GravityPower.StaticActivate();
         }
     }
+
+
 
     public void LoadData(object sender, SaveEventArg saveArg)
     {

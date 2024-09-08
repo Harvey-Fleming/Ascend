@@ -457,17 +457,21 @@ public class DialogueEvents : MonoBehaviour
     [YarnCommand("CompleteLevel")]
     public static void LoadNextLevel()
     {
+        AudioManager.instance.StopAll();
         GameManager.instance.LoadNextLevel();
+        
     }
     [YarnCommand("ReloadLevel")]
     public static void ReloadLevel()
     {
+        AudioManager.instance.StopAll();
         GameManager.instance.ReloadLevel();
     }
 
     [YarnCommand("LoadLevel")]
     public static void LoadLevel(int index)
     {
+        AudioManager.instance.StopAll();
         GameManager.instance.LoadLevel(index);
     }
 

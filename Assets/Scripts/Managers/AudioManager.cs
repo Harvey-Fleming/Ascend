@@ -44,6 +44,33 @@ public class AudioManager : MonoBehaviour
         }
         Debug.LogWarning("Could not Find Clip: " + clipName);
     }
+
+    public void Stop(string clipName)
+    {
+        foreach (Sound sound in sounds)
+        {
+            if (clipName == sound.clipName)
+            {
+                if (sound.source.isPlaying)
+                {
+                    sound.source.Stop();
+                }
+                return;
+            }
+            Debug.LogWarning("Could not Find Clip: " + clipName);
+        }
+    }
+
+    public void StopAll()
+    {
+        foreach (Sound sound in sounds)
+        {
+            if (sound.source.isPlaying)
+            {
+                sound.source.Stop();
+            }
+        }
+    }
 }
 
 [System.Serializable]

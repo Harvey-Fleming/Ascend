@@ -34,14 +34,4 @@ public class MainMenu : MonoBehaviour
     {
         Application.Quit();
     }
-
-    private void OnEnable()
-    {
-        
-    }
-
-    private void OnDisable()
-    {
-        
-    }
 }
