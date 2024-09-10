@@ -42,7 +42,7 @@ public class AudioManager : MonoBehaviour
                 return;
             }
         }
-        Debug.LogWarning("Could not Find Clip: " + clipName);
+        Debug.LogWarning("Play Error: Could not Find Clip: " + clipName);
     }
 
     public void Stop(string clipName)
@@ -57,7 +57,7 @@ public class AudioManager : MonoBehaviour
                 }
                 return;
             }
-            Debug.LogWarning("Could not Find Clip: " + clipName);
+            Debug.LogWarning("Stop Error: Could not Find Clip: " + clipName);
         }
     }
 
@@ -70,6 +70,64 @@ public class AudioManager : MonoBehaviour
                 sound.source.Stop();
             }
         }
+    }
+
+    public void FadeOutSound(string clipName, int fadeDuration)
+    {
+        foreach (Sound sound in sounds)
+        {
+            if (clipName == sound.clipName)
+            {
+                if (sound.source.isPlaying)
+                {
+                    float maxVol = sound.volume;
+
+                    StartCoroutine(FadeSound(sound.source, maxVol, 0, fadeDuration));
+                }
+                return;
+            }
+            Debug.LogWarning("Fade Out Error: Could not find Clip: " + clipName);
+        }
+    }
+
+    public void FadeInSound(string clipName, int fadeDuration)
+    {
+        foreach (Sound sound in sounds)
+        {
+            if (clipName == sound.clipName)
+            {
+                sound.source.Play();
+                if (sound.source.isPlaying)
+                {
+                    sound.source.volume = 0;
+                    float maxVol = sound.volume;
+                    
+
+                    StartCoroutine(FadeSound(sound.source, 0, maxVol, fadeDuration));
+                }
+                return;
+            }
+            Debug.LogWarning("Fade In Error: Could not find Clip: " + clipName);
+        }
+    }
+
+    IEnumerator FadeSound(AudioSource source, float start, float end, float duration)
+    {
+        float t = 0;
+        while(t/duration <= 1)
+        {
+            //Debug.Log(source.clip.name + " is now at " + source.volume);
+            source.volume = Mathf.Lerp(start, end, t/duration);
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        if(end == 0)
+        {
+            source.Stop();
+        }
+        source.volume = end;
+        yield return null;
     }
 }
 

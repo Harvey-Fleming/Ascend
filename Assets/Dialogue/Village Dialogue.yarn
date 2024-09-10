@@ -54,6 +54,8 @@ position: 132,-176
     <<MoveInDirection Friend 10 1 true>>
     <<DestroyActor DialogueSystem Friend>>
     <<FadeToBlack 5>>
+    <<SetNightTime>>
+    <<FadeOutMusic VillageMusic 2>>
     <<jump wakeup>>
 ===
 
@@ -65,6 +67,7 @@ position: 143,154
     Father: Cole!
     Father: Get Up!
     <<FadeFromBlack 5>>
+    <<FadeInMusic VillageSecondMusic 2>>
     <<StartFire>>
     You need to listen to me.
     These strange Stone creatures are attacking the village...

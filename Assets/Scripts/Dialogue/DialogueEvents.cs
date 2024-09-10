@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.Splines;
 using Yarn.Unity;
 
@@ -399,6 +400,15 @@ public class DialogueEvents : MonoBehaviour
             child.gameObject.SetActive(true);
         }
     }
+
+    [YarnCommand("SetNightTime")]
+    public static void SetNightTime()
+    {
+        GameObject.Find("Global Light 2D").GetComponent<Light2D>().intensity = 0.45f;
+
+        Color nightBackground = new Color(24, 45, 63);
+        Camera.main.backgroundColor = nightBackground;
+    }
     #endregion
 
     #region - MaintainPass Specific Dialogue Events
@@ -473,6 +483,24 @@ public class DialogueEvents : MonoBehaviour
     {
         AudioManager.instance.StopAll();
         GameManager.instance.LoadLevel(index);
+    }
+
+    [YarnCommand("PlayMusic")]
+    public static void PlayMusic(string name)
+    {
+        AudioManager.instance.Play(name);
+    }
+
+    [YarnCommand("FadeOutMusic")]
+    public static void FadeOutMusic(string fadeOutName, int fadeDuration)
+    {
+        AudioManager.instance.FadeOutSound(fadeOutName, fadeDuration);
+    }
+
+    [YarnCommand("FadeInMusic")]
+    public static void FadeInMusic(string fadeInname, int fadeDuration)
+    {
+        AudioManager.instance.FadeInSound(fadeInname, fadeDuration);
     }
 
 
