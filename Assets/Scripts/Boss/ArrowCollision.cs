@@ -5,6 +5,7 @@ using UnityEngine;
 public class ArrowCollision : MonoBehaviour
 {
     [SerializeField] private bool canHitGround = true;
+    [SerializeField] private bool destroyOnCollision = false;
 
     [SerializeField] private LayerMask groundLayers;
 
@@ -14,7 +15,16 @@ public class ArrowCollision : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Ground") && canHitGround)
         {
-            this.gameObject.SetActive(false);
+            if (destroyOnCollision)
+                Destroy(this.gameObject);
+            else
+                this.gameObject.SetActive(false);
+        }
+        else if(collision.gameObject.CompareTag("BossReflector"))
+        {
+
+            transform.RotateAround(transform.position, Vector3.forward, 180);
+            GetComponent<Rigidbody2D>().AddForce(-GetComponent<Rigidbody2D>().velocity, ForceMode2D.Impulse);
         }
     }
 

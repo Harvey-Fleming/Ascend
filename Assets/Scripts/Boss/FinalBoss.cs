@@ -94,7 +94,10 @@ public class FinalBoss : Boss
         {
             isActive = true;
             GameObject.Find("Boss Door").GetComponent<Animator>().SetTrigger("CloseFinalDoor");
-            currentState.EndState();
+            if(currentState != null)
+            {
+                currentState.EndState();
+            }
             currentState = new FinalIdleState(this);
         }
 

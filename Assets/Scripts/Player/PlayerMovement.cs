@@ -57,8 +57,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private bool canWallSlide = true;
     [SerializeField] private bool canDoubleJump = false;
 
-
-
     [Space]
     [SerializeField] private LayerMask GroundLayerMask;
 
@@ -145,7 +143,7 @@ public class PlayerMovement : MonoBehaviour
                     AirJump();
                 }
             }
-            else
+            else if(IsGrounded())
             {
                 animator.SetBool("IsGrounded", true);
                 IsBouncing = false;
@@ -262,7 +260,7 @@ public class PlayerMovement : MonoBehaviour
     {
         airJumpCounter = 0;
         rb.velocity = new Vector2(rb.velocity.x, 0);
-        if (rb.GetComponent<PlayerMovement>().IsInverse)
+        if (IsInverse)
         {
             rb.AddForce(Vector2.down * (jumpForce * 0.75f), ForceMode2D.Impulse);
         }
@@ -381,7 +379,34 @@ public class PlayerMovement : MonoBehaviour
         {
             raycastHit = Physics2D.BoxCast(boxCollider.bounds.center, boxCollider.bounds.size, 0, Vector2.up, extraHeightTest, GroundLayerMask);
         }
-        return raycastHit.collider != null && (isInverse ? rb.velocity.y > 0f : rb.velocity.y < 0.01f);
+        return raycastHit.collider != null && (isInverse ? (rb.velocity.y > -0.01f && rb.velocity.y < 0.01f) : rb.velocity.y < 0.01f);
+    }
+
+    public void FlipGraivty()
+    {
+        IsInverse = !IsInverse;
+        GravityScale *= -1;
+        rb.velocity = new Vector2(rb.velocity.x, 0);
+        //gameObject.transform.localScale = new Vector3(gameObject.transform.localScale.x,gameObject.transform.localScale.y * -1, gameObject.transform.localScale.z);
+        //GetComponent<SpriteRenderer>().flipY = !GetComponent<SpriteRenderer>().flipY;
+        GetComponent<SpriteRenderer>().flipX = !GetComponent<SpriteRenderer>().flipX;
+        transform.Rotate(new Vector3(0,0,180));
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("GravityFlip"))
+        {
+            FlipGraivty();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("GravityFlip") && IsInverse)
+        {
+            FlipGraivty();
+        }
     }
 
     private void EnableMovement(object sender, PlayerMovementEventArgs EventArgs)

@@ -47,6 +47,19 @@ position: 14,50
 
 ===
 
+title: wardenIntro
+---
+    <<ShakeScreen CameraManager>>
+    <<StartWarden>>
+    
+===
+
+title: collapsedarea
+---
+    Cole: It looks like the next room collapsed..
+    Cole: Maybe I can get up from the outside.
+===
+
 title: heartprefight
 position: 531,-239
 ---

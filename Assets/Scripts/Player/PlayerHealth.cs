@@ -11,6 +11,7 @@ public class PlayerHealth : MonoBehaviour
     int maxHealth = 1;
 
     bool hasTakenDamage = false;
+    [SerializeField] private bool canLoseLives = true;
 
     int lives = 3;
     [SerializeField] private TMP_Text liveText;
@@ -46,7 +47,6 @@ public class PlayerHealth : MonoBehaviour
     {
         if((collision.gameObject.tag == "Heart" || collision.gameObject.tag == "Lava" || collision.gameObject.tag == "Rock" || collision.gameObject.tag == "Arrow" || (collision.gameObject.tag == "Spike" && Vector3.Dot((collision.gameObject.transform.position - transform.position).normalized, collision.gameObject.transform.up.normalized) < -0.01f)) && !hasTakenDamage)
         {
-            Debug.Log("Hit Deadly object");
             hasTakenDamage = true;
             
         }
@@ -82,7 +82,8 @@ public class PlayerHealth : MonoBehaviour
     {
         Debug.Log("Player has died");
         PlayerEvents.OnPlayerDeath(this, new PlayerDeathEventArgs(lastCheckpoint.GetComponent<Checkpoint>()));
-        lives--;
+        if(canLoseLives) lives--;
+
         if(lives > 0)
         {
             AudioManager.instance.Play("playerdeath");
@@ -124,7 +125,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (GetComponent<PlayerMovement>().IsInverse)
         {
-            GravityPower.StaticActivate();
+            GetComponent<PlayerMovement>().FlipGraivty();
         }
     }
 

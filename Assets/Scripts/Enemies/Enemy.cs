@@ -23,6 +23,9 @@ public class Enemy : MonoBehaviour
         {
             if ((collision.gameObject.transform.position - boxCollider.bounds.max).y > 0)
             {
+                Rigidbody2D playerrb = collision.gameObject.GetComponent<Rigidbody2D>();
+                playerrb.velocity = new Vector2(playerrb.velocity.x, 0);
+                playerrb.AddForce(Vector2.up * 13, ForceMode2D.Impulse);
                 if (deactivationCoroutine == null)
                 {
                     deactivationCoroutine = StartCoroutine(Deactivate());
@@ -35,7 +38,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    IEnumerator Deactivate()
+    public virtual IEnumerator Deactivate()
     {
         animator.SetBool("IsActivated", false);
         float elapsedTime = 0f;

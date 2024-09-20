@@ -16,6 +16,8 @@ TagManager:
   - Spike
   - Rock
   - Arrow
+  - GravityFlip
+  - BossReflector
   layers:
   - Default
   - TransparentFX

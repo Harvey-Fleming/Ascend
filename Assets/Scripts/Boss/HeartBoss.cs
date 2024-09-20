@@ -110,8 +110,11 @@ public class HeartBoss : MonoBehaviour
             Vector3 pPos = GameObject.FindWithTag("Player").transform.position;
             Vector3 dir = pPos - this.transform.position;
 
-            arrows[i] = Instantiate(arrowPrefab, this.transform.position, Quaternion.identity);
-            arrows[i].tag = "Heart";
+            if(arrows[i] == null)
+            {
+                arrows[i] = Instantiate(arrowPrefab, this.transform.position, Quaternion.identity);
+                arrows[i].tag = "Heart";
+            }
 
             while(Vector3.Distance(pPos, arrows[i].transform.position) > 0.5f)
             {                  

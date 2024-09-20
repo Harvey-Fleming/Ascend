@@ -81,7 +81,7 @@ title: bossphasewarning
 tags:
 position: -202,-45
 ---
-    <<Fly Player 72.5 209.5 0 2 true>>
+    <<Fly Player 621.5 295.5 0 2 true>>
     Cole: Oh no! The floor is Rising, I need to move.
     //<<JumpSlerp DialogueSystem Player -149 174.4 0 1>>
     <<JumpInDirection Player 5 1 10>>

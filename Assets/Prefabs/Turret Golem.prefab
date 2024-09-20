@@ -98,6 +98,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74a6519b8adc9434bb9101a4f042f766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  projectileCooldown: 1
+  projectilePrefab: {fileID: 6402276661554136023, guid: 7bfdc5250495c654bbaf500f135f6e74, type: 3}
+  turretRange: 8
 --- !u!1 &5311081764924597485
 GameObject:
   m_ObjectHideFlags: 0

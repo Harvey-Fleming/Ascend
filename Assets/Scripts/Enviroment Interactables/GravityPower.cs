@@ -21,21 +21,15 @@ public class GravityPower : MonoBehaviour, IPowerUp
     public void Activate()
     {
         isActive = true;
-        
-        playerMovement.IsInverse = !playerMovement.IsInverse;
-        playerMovement.GravityScale *= -1;
-        playerMovement.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(playerMovement.gameObject.GetComponent<Rigidbody2D>().velocity.x, 0);
-        playerMovement.gameObject.transform.localScale = new Vector3(playerMovement.gameObject.transform.localScale.x , playerMovement.gameObject.transform.localScale.y * -1, playerMovement.gameObject.transform.localScale.z);
+
+        playerMovement.FlipGraivty();
         StartCoroutine(Deactivate());
     }
 
     public static void StaticActivate()
     {
         PlayerMovement playerMovement = GameObject.FindWithTag("Player").GetComponent<PlayerMovement>();
-        playerMovement.IsInverse = !playerMovement.IsInverse;
-        playerMovement.GravityScale *= -1;
-        playerMovement.gameObject.GetComponent<Rigidbody2D>().velocity = new Vector2(playerMovement.gameObject.GetComponent<Rigidbody2D>().velocity.x, 0);
-        playerMovement.gameObject.transform.localScale = new Vector3(playerMovement.gameObject.transform.localScale.x, playerMovement.gameObject.transform.localScale.y * -1, playerMovement.gameObject.transform.localScale.z);
+        playerMovement.FlipGraivty();
     }
 
     public IEnumerator Deactivate()

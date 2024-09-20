@@ -16,6 +16,7 @@ public class CameraManager : MonoBehaviour
     public bool IsLerpingYDamping { get; private set;}
 
     public bool LerpedFromPlayerFalling { get; set; }
+    public CinemachineVirtualCamera CurrentCamera { get => currentCamera;}
 
     GameObject player;
 

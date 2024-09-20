@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class PatrolEnemy : Enemy
 {
-    [SerializeField] private float patrolDistance;
-    private float totalpatrolDistance;
+    [SerializeField] protected float patrolDistance;
+    protected float totalpatrolDistance;
     [SerializeField] private float rayDistance;
     [SerializeField] private float moveSpeed;
 
-    [SerializeField] LayerMask mask;
+    protected bool isMoving = true;
+
+    [SerializeField] protected LayerMask mask;
 
     public override void Start()
     {
@@ -18,9 +20,9 @@ public class PatrolEnemy : Enemy
     }
 
     // Update is called once per frame
-    void Update()
+    protected virtual void Update()
     {
-        if (deactivationCoroutine == null)
+        if (deactivationCoroutine == null && isMoving)
         {
             //Raycast diagnonally down to detect an edge
             RaycastHit2D hitInfo = Physics2D.Raycast(Mathf.Sign(transform.localScale.x) > 0 ? new Vector2(boxCollider.bounds.max.x + 0.2f, boxCollider.bounds.min.y + 0.1f) : new Vector2(boxCollider.bounds.min.x - 0.2f, boxCollider.bounds.min.y + 0.1f), Vector2.down, rayDistance, mask);

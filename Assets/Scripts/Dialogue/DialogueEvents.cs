@@ -110,10 +110,6 @@ public class DialogueEvents : MonoBehaviour
     public static IEnumerator ForceMoveInDirCoroutine(GameObject target, float xDir, float duration, bool lookRight = true)
     {
         Animator animator = target.GetComponent<Animator>();
-        if (animator != null)
-        {
-            Debug.Log(target.name + " Has an animator");
-        }
         Vector3 startPos = target.transform.position;
         Vector3 endPos = target.transform.position + new Vector3(xDir, 0.0f, 0.0f);
         float t = 0;
@@ -501,6 +497,12 @@ public class DialogueEvents : MonoBehaviour
     public static void FadeInMusic(string fadeInname, int fadeDuration)
     {
         AudioManager.instance.FadeInSound(fadeInname, fadeDuration);
+    }
+
+    [YarnCommand("StartWarden")]
+    public static void StartWardenFight()
+    {
+        FindObjectOfType<Warden>().IsActive = true;
     }
 
 

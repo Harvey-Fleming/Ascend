@@ -9,6 +9,8 @@ public class FlyingEnemy : MonoBehaviour
 
     [SerializeField] private float projectileCooldown = 1f;
     [SerializeField] private GameObject projectilePrefab;
+
+    [SerializeField] private float turretRange = 5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +22,6 @@ public class FlyingEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         Vector3 diff = player.transform.position - gun.transform.position;
         diff.Normalize();
         float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
@@ -32,10 +33,32 @@ public class FlyingEnemy : MonoBehaviour
         while(gameObject.activeInHierarchy)
         {
             yield return new WaitForSeconds(projectileCooldown);
-            GameObject projectile = Instantiate(projectilePrefab, gun.transform.position, gun.transform.rotation);
-            projectile.transform.localScale = Vector3.one;
+            if(Vector3.Distance(transform.position, player.transform.position) <= turretRange)
+            {
+                GameObject projectile = Instantiate(projectilePrefab, gun.transform.position, gun.transform.rotation);
+                projectile.GetComponent<ArrowCollision>().CanHitGround = false;
+                projectile.GetComponent<Collider2D>().enabled = false;
+                projectile.transform.rotation = Quaternion.Euler(gun.transform.rotation.eulerAngles + new Vector3(0, 0, 180));
+
+                if(projectile.GetComponent<Rigidbody2D>() != null)
+                {
+                    projectile.GetComponent<Rigidbody2D>().AddForce((player.transform.position - gun.transform.position).normalized * 10, ForceMode2D.Impulse);
+                }
+                
+
+
+                
+                yield return new WaitForSeconds(0.1f);
+                projectile.GetComponent<Collider2D>().enabled = true;
+                projectile.GetComponent<ArrowCollision>().CanHitGround = true;
+            }
             yield return null;
         }
 
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, turretRange);
     }
 }
