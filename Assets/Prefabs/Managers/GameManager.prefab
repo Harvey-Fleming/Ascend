@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2930815512354453701}
-  - component: {fileID: 7201544042591778458}
-  - component: {fileID: 8623317130297385565}
   - component: {fileID: 3870704220962580337}
   m_Layer: 0
   m_Name: GameManager
@@ -34,35 +32,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7201544042591778458
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 682517664881233922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e95cfa285ba70ab4598fdd6643a724dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timerText: {fileID: 0}
-  startButton: {fileID: 0}
---- !u!114 &8623317130297385565
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 682517664881233922}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d5caebff59e9bd4fb41a865238d758d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pauseMenu: {fileID: 0}
-  mainMenu: {fileID: 0}
-  isPaused: 0
 --- !u!114 &3870704220962580337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,6 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f26103029b76948b10fc909b246cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leaderboardPrefab: {fileID: 8871160141008364009, guid: e2fac7142bbb7d84aa6004c761f33739, type: 3}
-  leaderboardParent: {fileID: 0}
   shouldLoad: 0
+  isHardMode: 0

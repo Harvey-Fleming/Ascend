@@ -7,13 +7,15 @@ public class HeartBossTrigger : MonoBehaviour
 {
     [SerializeField] GameObject bossBlockingPlatform;
     public bool hasStarted = false;
+    public bool hasrunDialogue = false;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Player")
         {
-            if(!hasStarted)
+            if(!hasStarted && !hasrunDialogue)
             {
+                hasrunDialogue = true;
                 GameObject.FindObjectOfType<DialogueRunner>().StartDialogue("heartprefight");
 
             }
@@ -25,9 +27,6 @@ public class HeartBossTrigger : MonoBehaviour
     {
         hasStarted = true;
         Camera.main.orthographicSize = 10;
-        Vector3 camlocalPos = Camera.main.transform.localPosition;
-        camlocalPos.y += 5;
-        Camera.main.transform.localPosition = camlocalPos;
 
         HeartBoss hboss = FindObjectOfType<HeartBoss>();
         hboss.StartFight();

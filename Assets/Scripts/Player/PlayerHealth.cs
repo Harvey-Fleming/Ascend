@@ -31,7 +31,16 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         lastCheckpoint = defaultCheckpoint;
+        SetHardMode();
         UpdateLives();
+    }
+
+    public void SetHardMode()
+    {
+        if(GameManager.instance.IsHardMode)
+        {
+            lives = 1;
+        }
     }
 
     private void Update()

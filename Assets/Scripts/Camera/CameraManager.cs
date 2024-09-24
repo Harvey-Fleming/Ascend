@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using System;
+using Yarn.Unity;
 
 public class CameraManager : MonoBehaviour
 {
@@ -153,6 +154,13 @@ public class CameraManager : MonoBehaviour
     {
         if(framingTransposer != null)
             panCameraRoutine = StartCoroutine(PanCamera(panDistance, panTime, panDirection, panToStartingPos));
+    }
+
+    [YarnCommand("PanCameraDown")]
+    public void OnPanCameraDown(float panDistance, float panTime, bool panToStartingPos)
+    {
+        if (framingTransposer != null)
+            panCameraRoutine = StartCoroutine(PanCamera(panDistance, panTime, PanDirection.Down, panToStartingPos));
     }
 
     IEnumerator PanCamera(float panDistance, float panTime, PanDirection panDirection, bool panToStartingPos)

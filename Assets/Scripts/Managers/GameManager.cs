@@ -9,14 +9,17 @@ using Yarn.Unity;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance { get; private set; }
-
+   
     private float level = 0;
 
     [SerializeField] [Space] private bool shouldLoad;
+    [SerializeField] private bool isHardMode;
+
+    public bool IsHardMode { get => isHardMode; set => isHardMode = value; }
 
     private void Awake()
     {
-        
+        DontDestroyOnLoad(this);
         if (instance != null)
         {
             Destroy(this.gameObject);

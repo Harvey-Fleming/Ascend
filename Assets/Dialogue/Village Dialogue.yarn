@@ -17,6 +17,15 @@ position: -195,-173
     
 ===
 
+title: walljump
+---
+    Cole has the ability to jump off walls
+    Press the movement direction in the direction of the wall, while off the ground, to slide down it..
+    While sliding, press the jump button to perform a wall jump
+
+===
+
+
 title: backtoVillage
 tags:
 position: -217,150
@@ -33,6 +42,8 @@ position: -217,150
     Cole: We should get back to the village.
     <<MoveToActor Friend Player 1 false>>
     <<DestroyActor DialogueSystem Friend>>
+
+    Move with A/D or the Arrow Keys and press Space to jump!
 ===
 
 title: talktofather

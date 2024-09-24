@@ -14,8 +14,6 @@ public class TimeManager : MonoBehaviour
     DateTime timer;
     [SerializeField] TMP_Text timerText;
 
-    [SerializeField] Button startButton;
-
     bool isRunning = false;
 
         public DateTime Timer { get => timer; set => timer = value; }
@@ -57,12 +55,6 @@ public class TimeManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if(PlayerPrefs.GetInt("Menu") == 1)
-        {
-            startButton.onClick.Invoke();
-            PlayerPrefs.SetInt("Menu", 0);
-            PlayerPrefs.Save();
-        }
     }
 
     public void StartTimer()

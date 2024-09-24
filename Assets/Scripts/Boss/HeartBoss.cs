@@ -33,7 +33,8 @@ public class HeartBoss : MonoBehaviour
     [Space]
     [SerializeField] Image blackImage;
 
-
+    private float maxIdleSwitchTimer = 1f;
+    private float idleSwitchTimer = 0f;
 
     [SerializeField] Sprite deathSprite;
 
@@ -48,16 +49,16 @@ public class HeartBoss : MonoBehaviour
         Death,
     }
 
-    private void Start()
-    {
-        
-    }
-
     private void Update()
     {
-        if(currentAttack == HeartState.idle && hasStarted)
+        if(currentAttack == HeartState.idle && hasStarted && idleSwitchTimer >= maxIdleSwitchTimer)
         {
             NextAttack();
+            idleSwitchTimer = 0;
+        }
+        else if(currentAttack == HeartState.idle && hasStarted)
+        {
+            idleSwitchTimer += Time.deltaTime;
         }
     }
 
@@ -114,23 +115,30 @@ public class HeartBoss : MonoBehaviour
             {
                 arrows[i] = Instantiate(arrowPrefab, this.transform.position, Quaternion.identity);
                 arrows[i].tag = "Heart";
+                arrows[i].layer = 8;
+            }
+            else
+            {
+                arrows[i].layer = 8;
+                arrows[i].transform.position = this.transform.position;
             }
 
-            while(Vector3.Distance(pPos, arrows[i].transform.position) > 0.5f)
-            {                  
-                arrows[i].transform.position += dir.normalized * arrowSpeed * 0.01f;
-                float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-                arrows[i].transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
-                yield return new WaitForSeconds(0.01f);
-            }
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            arrows[i].transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
 
-            arrows[i].SetActive(false);
+            if (arrows[i].GetComponent<Rigidbody2D>() != null)
+            {
+                arrows[i].GetComponent<Rigidbody2D>().AddForce((dir).normalized * 10, ForceMode2D.Impulse);
+                arrows[i].GetComponent<ArrowCollision>().Direction = dir;
+            }
+            yield return new WaitForSeconds(0.5f);
         }
         arrowAttack = null;
         currentAttack = HeartState.idle;
         yield return null;
     }
 
+    [ContextMenu("Start Boss")]
     public void StartFight()
     {
         hasStarted = true;
@@ -139,14 +147,30 @@ public class HeartBoss : MonoBehaviour
     public void TakeDamage()
     {
         if(hasStarted)
-        Debug.Log("Boss has Taken Damage");
-        currentHealth--;
-
-        if(currentHealth <= 0)
         {
-            Death();
-        }
+            Debug.Log("Boss has Taken Damage");
+            currentHealth--;
 
+            foreach(GameObject arrow in arrows)
+            {
+                arrow.SetActive(false);
+            }
+
+            if (arrowAttack != null)
+            {
+                StopCoroutine(arrowAttack);
+            }
+
+            StopBeam();
+
+            currentAttack = HeartState.idle;
+
+
+            if (currentHealth <= 0)
+            {
+                Death();
+            }
+        }
     }
 
     [ContextMenu("Kill Boss")]
@@ -183,17 +207,9 @@ public class HeartBoss : MonoBehaviour
         {
             Debug.Log("Boss Reset");
             currentHealth = maxHealth;
-            if(arrowAttack != null)
+            if (arrowAttack != null)
                 StopCoroutine(arrowAttack);
-
-            if (beamAttack != null)
-                StopCoroutine(beamAttack);
-
-            BeamPSys.Stop();
-            ParticleSystem.ShapeModule beamShape = BeamPSys.shape;
-            Vector3 beamRot = BeamPSys.shape.rotation;
-            beamRot.x = 0;
-            beamShape.rotation = beamRot;
+            StopBeam();
 
             foreach (GameObject arrow in arrows)
             {
@@ -213,6 +229,27 @@ public class HeartBoss : MonoBehaviour
 
     }
 
+    private void StopBeam()
+    {
+        if (beamAttack != null)
+            StopCoroutine(beamAttack);
+
+        BeamPSys.Stop();
+        ParticleSystem.ShapeModule beamShape = BeamPSys.shape;
+        Vector3 beamRot = BeamPSys.shape.rotation;
+        beamRot.x = 0;
+        beamShape.rotation = beamRot;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("Heart Hit: " + collision.gameObject.name);
+        if (collision.gameObject.CompareTag("Heart") && Vector3.Dot(collision.gameObject.GetComponent<Rigidbody2D>().velocity.normalized, (collision.gameObject.transform.position - transform.position).normalized) == 0)
+        {
+            Debug.Log("Hit by arrow");
+            TakeDamage();
+        }
+    }
     private void OnEnable()
     {
         PlayerEvents.PlayerDeath += ResetBoss;
