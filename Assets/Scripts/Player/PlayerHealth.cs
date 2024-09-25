@@ -45,7 +45,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Update()
     {
-        if(hasTakenDamage)
+        if(hasTakenDamage && health > 0)
         {
             TakeDamage();
         }
@@ -89,23 +89,35 @@ public class PlayerHealth : MonoBehaviour
 
     private void PlayerDeath()
     {
+        Time.timeScale = 0.5f;
+        GetComponent<PlayerMovement>().EnableMovement(false);
+        GetComponent<PlayerMovement>().IsGravityEnabled = false;
         Debug.Log("Player has died");
-        PlayerEvents.OnPlayerDeath(this, new PlayerDeathEventArgs(lastCheckpoint.GetComponent<Checkpoint>()));
-        if(canLoseLives) lives--;
+        AudioManager.instance.Play("playerdeath");
+        GetComponent<Animator>().SetBool("IsDead", true);
 
-        if(lives > 0)
+        PlayerEvents.OnPlayerDeath(this, new PlayerDeathEventArgs(lastCheckpoint.GetComponent<Checkpoint>()));
+        
+        
+    }
+
+    public void OnDeathAnimationFinished()
+    {
+        Time.timeScale = 1f;
+        if (canLoseLives) lives--;
+
+        if (lives > 0)
         {
-            AudioManager.instance.Play("playerdeath");
+
             UpdateLives();
             Respawn();
         }
         else
         {
             //Show Game Over Dialogue
-            if(!GameObject.FindObjectOfType<Yarn.Unity.DialogueRunner>().IsDialogueRunning)
+            if (!GameObject.FindObjectOfType<Yarn.Unity.DialogueRunner>().IsDialogueRunning)
                 GameObject.FindObjectOfType<Yarn.Unity.DialogueRunner>().StartDialogue("playerdeath");
         }
-        
     }
 
     public void AddLives(int lives)
@@ -131,6 +143,9 @@ public class PlayerHealth : MonoBehaviour
 
         health = maxHealth;
         hasTakenDamage = false;
+        GetComponent<Animator>().SetBool("IsDead", false);
+        GetComponent<PlayerMovement>().EnableMovement(true);
+        GetComponent<PlayerMovement>().IsGravityEnabled = true;
 
         if (GetComponent<PlayerMovement>().IsInverse)
         {

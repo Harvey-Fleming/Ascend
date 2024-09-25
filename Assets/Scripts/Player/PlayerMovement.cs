@@ -15,6 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float fallGravityMultiplier = 1;
     [SerializeField] private float gravityScale = 1;
     [SerializeField] private float maxFallSpeed = 15;
+    [SerializeField] private bool isGravityEnabled = true;
     private float fallSpeedCameraDampThreshold;
 
 
@@ -69,6 +70,8 @@ public class PlayerMovement : MonoBehaviour
     public float GravityScale { get => gravityScale; set => gravityScale = value; }
     public bool IsInverse { get => isInverse; set => isInverse = value; }
     public bool IsBouncing { get => isBouncing; set => isBouncing = value; }
+    public bool CanMove { get => canMove; set => canMove = value; }
+    public bool IsGravityEnabled { get => isGravityEnabled; set => isGravityEnabled = value; }
 
 
     // Start is called before the first frame update
@@ -232,25 +235,32 @@ public class PlayerMovement : MonoBehaviour
             }
 
             #region Falling Gravity
-            if (rb.velocity.y < 0 && !isInverse)
+            if (isGravityEnabled)
             {
-                rb.gravityScale = gravityScale * fallGravityMultiplier;
-                rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -maxFallSpeed));
-            }
-            else if (rb.velocity.y > 0 && isInverse)
-            {
-                rb.gravityScale = gravityScale * fallGravityMultiplier;
-                rb.velocity = new Vector2(rb.velocity.x, Mathf.Min(rb.velocity.y, maxFallSpeed));
+                if (rb.velocity.y < 0 && !isInverse)
+                {
+                    rb.gravityScale = gravityScale * fallGravityMultiplier;
+                    rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, -maxFallSpeed));
+                }
+                else if (rb.velocity.y > 0 && isInverse)
+                {
+                    rb.gravityScale = gravityScale * fallGravityMultiplier;
+                    rb.velocity = new Vector2(rb.velocity.x, Mathf.Min(rb.velocity.y, maxFallSpeed));
+                }
+                else
+                {
+                    if (IsInverse)
+                    {
+                        rb.gravityScale = -gravityScale;
+                    }
+                    {
+                        rb.gravityScale = gravityScale;
+                    }
+                } 
             }
             else
             {
-                if (IsInverse)
-                {
-                    rb.gravityScale = -gravityScale;
-                }
-                {
-                    rb.gravityScale = gravityScale;
-                }          
+                rb.gravityScale = 0;
             }
             #endregion 
         }
@@ -420,6 +430,18 @@ public class PlayerMovement : MonoBehaviour
             rb.velocity = velocity;
         }
         //Debug.Log("New Movement State is " + EventArgs.newPlayerMoveState);
+    }
+
+    public void EnableMovement(bool canMove)
+    {
+        this.canMove = canMove;
+
+        if (!canMove)
+        {
+            Vector3 velocity = rb.velocity;
+            velocity.x = 0;
+            rb.velocity = velocity;
+        }
     }
 
     private void OnEnable()
