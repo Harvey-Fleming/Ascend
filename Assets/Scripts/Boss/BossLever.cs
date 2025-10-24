@@ -9,9 +9,11 @@ public class BossLever : Lever
 
     public UnityEvent leverFlipped;
 
+    public GameObject LeverPlatform { get => leverPlatform;}
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player" && !HasUsed)
+        if (collision.gameObject.tag == "Player" && !HasUsed && IsEnabled)
         {
             HasUsed = true;
             GetComponent<Animator>().SetTrigger("On");
@@ -37,5 +39,16 @@ public class BossLever : Lever
 
 
         yield return null;
+    }
+
+    public void SetLeverActive(bool isEnabled)
+    {
+        this.IsEnabled = isEnabled;
+
+        if(!isEnabled)
+            GetComponent<Animator>().SetTrigger("On");
+        else
+            GetComponent<Animator>().SetTrigger("Off");
+
     }
 }

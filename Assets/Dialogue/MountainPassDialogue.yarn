@@ -7,6 +7,7 @@ AH
 title: mountainlevelstart
 position: -567,-1
 ---
+    <<SetGravity Friend false>>
     I need to find this <color=\#ff0000>Nefarium</color> guy and get my friend back.
     My father said these mines became too dangerous, which is why they stopped using them, so I should be careful.
 ===
@@ -48,8 +49,13 @@ position: -288,-2
 title: bossstart
 position: -293,185
 ---
-<<SpawnActor DialogueSystem Friend 110 38 0>>
+<<DestroyActor DialogueSystem Friend>>
+<<SpawnActor DialogueSystem Friend 110 36 0>>
+<<wait 0.01>>
+<<StartFriendLift>>
+<<SetFriendGravity false>>
 <<Move Player 110 1 true>>
+
 Cole: Let my friend go, <color=\#ff0000>Nefarium</color>!
 Nefarium: I've had quite enough of you!
 Nefarium: I'll show you why you should reconsider messing with me.
@@ -62,7 +68,11 @@ position: -291,349
 --- 
     <<DestroyActor DialogueSystem Nefarium>>
     <<SpawnActor DialogueSystem Nefarium 110 31 0>>
+    <<Move Player 110 2 lookRight>>
     Nefarium: Fine, have your friend back!
+    <<Move Player 108 1 true>>
+    <<SetFriendGravity true>>
+    <<StopFriendLift>>
     Nefarium: My golems already caprtured enough people from your village to satisfy our needs...
 
     Nefarium: See you never!
@@ -87,6 +97,7 @@ position: -291,349
     -> I think you're right
     -> I'll do it
     Cole: Okay, Let's go have a look and see from there
+    <<FadeToBlack 10>>
     <<CompleteLevel>>
 ===
 

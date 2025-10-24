@@ -46,8 +46,17 @@ public class NefariumBoss : Boss
 
         if (currentHealth <= 0)
         {
+            currentState.EndState();
             currentState = new NefariumDeathState(this);
         }
+    }
+
+    [ContextMenu("Kill Nefarium")]
+    public void KillNefarium()
+    {
+        currentState.EndState();
+        GetComponent<Collider2D>().enabled = false;
+        currentState = new NefariumDeathState(this);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -147,6 +156,8 @@ public class NefariumRockDropState : State
     float phaseDuration = 4f;
 
     bool hasChangedBase = false;
+    bool hasFinished = false;
+    bool hasEndTriggered = false;
 
     List<GameObject> particles = new();
 
@@ -165,48 +176,104 @@ public class NefariumRockDropState : State
 
     public override void EndState()
     {
-        throw new System.NotImplementedException();
+        hasEndTriggered = true;
+        controller.StartCoroutine(ResetRocks());
+    }
+
+    private IEnumerator ResetRocks()
+    {
+        while(!hasFinished)
+        {
+            particleT += Time.deltaTime;
+            if (particleT > particleDuration)
+            {
+                t += Time.deltaTime;
+                if (t >= phaseDuration)
+                {
+                    if (!hasChangedBase)
+                    {
+                        hasChangedBase = true;
+                        leftRockBasePos = rockLeft.transform.position;
+                        rightRockBasePos = rockRight.transform.position;
+                    }
+                    exitT += Time.deltaTime;
+
+                    //Going Under
+                    rockLeft.transform.position = Vector3.Lerp(leftRockBasePos, leftRockBasePos - (Vector3.up * 14.5f), exitT / 2);
+                    rockRight.transform.position = Vector3.Lerp(rightRockBasePos, rightRockBasePos - (Vector3.up * 14.5f), exitT / 2);
+
+                    if (exitT > 2)
+                    {
+                        //Reset back
+                        rockLeft.transform.position = new Vector3(rockLeft.transform.position.x, 39, rockLeft.transform.position.z);
+                        rockRight.transform.position = new Vector3(rockRight.transform.position.x, 38, rockRight.transform.position.z);
+                        hasFinished = true;
+                    }
+                }
+                else
+                {
+
+                    foreach (GameObject particle in particles)
+                    {
+                        GameObject.Destroy(particle);
+                    }
+                    //Falling Down
+                    rockLeft.transform.position = Vector3.Lerp(leftRockBasePos, leftRockBasePos - (Vector3.up * 14.5f), t);
+                    rockRight.transform.position = Vector3.Lerp(rightRockBasePos, rightRockBasePos - (Vector3.up * 14.5f), t);
+
+
+                }
+            }
+            yield return new WaitForEndOfFrame();
+        }
     }
 
     public override void Execute()
-    {    
-        particleT += Time.deltaTime;
-
-        if(particleT > particleDuration)
+    {
+        if (!hasEndTriggered)
         {
-            t += Time.deltaTime;
-            if (t >= phaseDuration)
+            particleT += Time.deltaTime;
+
+            if (particleT > particleDuration)
             {
-                if(!hasChangedBase)
+                t += Time.deltaTime;
+                if (t >= phaseDuration)
                 {
-                    hasChangedBase = true;
-                    leftRockBasePos = rockLeft.transform.position;
-                    rightRockBasePos = rockRight.transform.position;
+                    if (!hasChangedBase)
+                    {
+                        hasChangedBase = true;
+                        leftRockBasePos = rockLeft.transform.position;
+                        rightRockBasePos = rockRight.transform.position;
+                    }
+                    exitT += Time.deltaTime;
+
+                    //Going Under
+                    rockLeft.transform.position = Vector3.Lerp(leftRockBasePos, leftRockBasePos - (Vector3.up * 14.5f), exitT / 2);
+                    rockRight.transform.position = Vector3.Lerp(rightRockBasePos, rightRockBasePos - (Vector3.up * 14.5f), exitT / 2);
+
+                    if (exitT > 2)
+                    {
+                        //Reset back
+                        rockLeft.transform.position = new Vector3(rockLeft.transform.position.x, 39, rockLeft.transform.position.z);
+                        rockRight.transform.position = new Vector3(rockRight.transform.position.x, 38, rockRight.transform.position.z);
+                        hasFinished = true;
+                        ((NefariumBoss)controller).CurrentState = new NefariumIdleState(controller);
+                    }
                 }
-                exitT += Time.deltaTime;
-
-                rockLeft.transform.position = Vector3.Lerp(leftRockBasePos, leftRockBasePos - (Vector3.up * 14.5f), exitT / 2);
-                rockRight.transform.position = Vector3.Lerp(rightRockBasePos, rightRockBasePos - (Vector3.up * 14.5f), exitT / 2);
-
-                if(exitT > 2)
+                else
                 {
-                    rockLeft.transform.position = new Vector3(rockLeft.transform.position.x, 39, rockLeft.transform.position.z);
-                    rockRight.transform.position = new Vector3(rockRight.transform.position.x, 38, rockRight.transform.position.z);
-                    ((NefariumBoss)controller).CurrentState = new NefariumIdleState(controller);
-                }
-            }
-            else
-            {
-                
-                foreach (GameObject particle in particles)
-                {
-                    GameObject.Destroy(particle);
-                }
-                rockLeft.transform.position = Vector3.Lerp(leftRockBasePos, leftRockBasePos - (Vector3.up * 14.5f), t);
-                rockRight.transform.position = Vector3.Lerp(rightRockBasePos, rightRockBasePos - (Vector3.up * 14.5f), t);
+
+                    foreach (GameObject particle in particles)
+                    {
+                        GameObject.Destroy(particle);
+                    }
+                    //Falling Down
+                    rockLeft.transform.position = Vector3.Lerp(leftRockBasePos, leftRockBasePos - (Vector3.up * 14.5f), t);
+                    rockRight.transform.position = Vector3.Lerp(rightRockBasePos, rightRockBasePos - (Vector3.up * 14.5f), t);
 
 
-            }
+                }
+            } 
         }
 
 
@@ -306,7 +373,7 @@ public class NefariumBeamState : State
             beamCounter += ((NefariumBoss)controller).BeamSpeed * Time.deltaTime;
             yield return new WaitForSeconds(0.15f);
         }
-
+        renderer.enabled = false;
         ((NefariumBoss)controller).CurrentState = new NefariumRockDropState(controller);
         FlipColliderState();
         beamAttack = null;
@@ -315,6 +382,9 @@ public class NefariumBeamState : State
 
     public override void EndState()
     {
-        throw new System.NotImplementedException();
+        LineRenderer renderer = controller.GetComponent<LineRenderer>();
+        renderer.enabled = false;
+        FlipColliderState();
+        beamAttack = null;
     }
 }

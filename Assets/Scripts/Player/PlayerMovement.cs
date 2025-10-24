@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravityScale = 1;
     [SerializeField] private float maxFallSpeed = 15;
     [SerializeField] private bool isGravityEnabled = true;
-    private float fallSpeedCameraDampThreshold;
+    private float fallSpeedCameraDampThreshold = -15f;
 
 
     [Header("Jump")]
@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
 
     private bool isInverse = false;
     private bool isBouncing = false;
-    private bool canMove = true;
+    [SerializeField] private bool canMove = true;
 
     [Header("Ability States")]
     [SerializeField] private bool canWallJump = true;
@@ -164,6 +164,14 @@ public class PlayerMovement : MonoBehaviour
             {
                 Turn();
             } 
+        }
+        else
+        {
+            //Animations for when dialogue is playing
+            if(!IsGrounded())
+            {
+                animator.SetBool("IsGrounded", false);
+            }
         }
 
         //if velocity is lower? than the threshold and not already looking ahead

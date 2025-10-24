@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Yarn.Unity;
 
 public class HeartBoss : MonoBehaviour
 {
@@ -37,6 +38,7 @@ public class HeartBoss : MonoBehaviour
     private float idleSwitchTimer = 0f;
 
     [SerializeField] Sprite deathSprite;
+    Animator animator;
 
     Coroutine beamAttack;
     Coroutine arrowAttack;
@@ -47,6 +49,11 @@ public class HeartBoss : MonoBehaviour
         Beam,
         Projectiles,
         Death,
+    }
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -148,12 +155,16 @@ public class HeartBoss : MonoBehaviour
     {
         if(hasStarted)
         {
+            
             Debug.Log("Boss has Taken Damage");
             currentHealth--;
 
             foreach(GameObject arrow in arrows)
             {
-                arrow.SetActive(false);
+                if(arrow != null)
+                {
+                    arrow.SetActive(false);
+                }
             }
 
             if (arrowAttack != null)
@@ -198,7 +209,7 @@ public class HeartBoss : MonoBehaviour
         FindObjectOfType<TimeManager>().StopTimer();
 
         GameManager.instance.StartFadeToBlack();
-        FindObjectOfType<FinalScreen>().OnShowScreen(FindObjectOfType<TimeManager>().GetTimer(), FindObjectOfType<CollectCoin>().CoinsGathered);
+        FindObjectOfType<DialogueRunner>().StartDialogue("heartpostfight");
     }
 
     public void ResetBoss(object sender, PlayerDeathEventArgs args)
@@ -247,9 +258,20 @@ public class HeartBoss : MonoBehaviour
         if (collision.gameObject.CompareTag("Heart") && Vector3.Dot(collision.gameObject.GetComponent<Rigidbody2D>().velocity.normalized, (collision.gameObject.transform.position - transform.position).normalized) == 0)
         {
             Debug.Log("Hit by arrow");
+
+            BossLever[] levers = GameObject.FindObjectsOfType<BossLever>();
+            
+            foreach(BossLever lever in levers)
+            {
+                if(lever.LeverPlatform == collision.gameObject.GetComponent<ArrowCollision>().Reflector)
+                {
+                    lever.SetLeverActive(false);
+                }
+            }
             TakeDamage();
         }
     }
+
     private void OnEnable()
     {
         PlayerEvents.PlayerDeath += ResetBoss;

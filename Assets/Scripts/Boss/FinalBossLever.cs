@@ -25,10 +25,9 @@ public class FinalBossLever : Lever
         }
     }
 
-    public override IEnumerator ResetLeverRoutine()
+    public override void ResetLever()
     {
-        yield return new WaitForSeconds(DownTime);
-        HasUsed = false;
+        hasUsed = false;
         GetComponent<Animator>().SetTrigger("Off");
     }
 

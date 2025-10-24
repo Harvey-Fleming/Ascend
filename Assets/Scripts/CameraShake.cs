@@ -14,6 +14,7 @@ public class CameraShake : MonoBehaviour
     private float timer;
     
     [YarnCommand("ShakeScreen")]
+    [ContextMenu("Start Camera Shake")]
     public void StartShake()
     {
         cinemachineCamera = GetComponent<CameraManager>().CurrentCamera;

@@ -121,14 +121,14 @@ ScriptedImporter:
   animatedSpriteImportData:
   - name: evilorb
     originalName: 
-    pivot: {x: 0.5, y: 0}
+    pivot: {x: 0.49206352, y: 0}
     alignment: 9
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
       x: 4
       y: 4
-      width: 64
+      width: 63
       height: 64
     spriteID: 072dae62ca4f7fe498ddeec4931956fb
     spriteBone: []
@@ -151,9 +151,9 @@ ScriptedImporter:
     - name: evilorb
       frameIndex: 0
       cellRect:
-        x: 0
+        x: 1
         y: 0
-        width: 64
+        width: 63
         height: 64
       spriteId: 072dae62ca4f7fe498ddeec4931956fb
     linkedCells: []

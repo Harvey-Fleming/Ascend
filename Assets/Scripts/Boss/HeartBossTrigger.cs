@@ -9,6 +9,8 @@ public class HeartBossTrigger : MonoBehaviour
     public bool hasStarted = false;
     public bool hasrunDialogue = false;
 
+    [SerializeField] Cinemachine.CinemachineVirtualCamera bossCam;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.tag == "Player")
@@ -16,6 +18,7 @@ public class HeartBossTrigger : MonoBehaviour
             if(!hasStarted && !hasrunDialogue)
             {
                 hasrunDialogue = true;
+                CameraManager.instance.ForceSwapCamera(bossCam);
                 GameObject.FindObjectOfType<DialogueRunner>().StartDialogue("heartprefight");
 
             }
@@ -26,7 +29,6 @@ public class HeartBossTrigger : MonoBehaviour
     public void StartHeartBoss()
     {
         hasStarted = true;
-        Camera.main.orthographicSize = 10;
 
         HeartBoss hboss = FindObjectOfType<HeartBoss>();
         hboss.StartFight();
@@ -42,10 +44,6 @@ public class HeartBossTrigger : MonoBehaviour
     public void Reset()
     {
         hasStarted = false;
-        Camera.main.orthographicSize = 7.5f;
-        Vector3 camlocalPos = Camera.main.transform.localPosition;
-        camlocalPos.y -= 5;
-        Camera.main.transform.localPosition = camlocalPos;
 
         bossBlockingPlatform.SetActive(false);
 

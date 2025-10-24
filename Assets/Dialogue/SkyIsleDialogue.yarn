@@ -47,7 +47,10 @@ position: 257,-44
     An arc of shadows connects Nefarium and the machine.
 
     //Nefarium Drifts towards the heart before fusing to form the Omega Heart
-    <<Fly Nefarium 72.5 217.5 0 2 false>>
+    <<Fly Nefarium 655.53 304.23 0 1 false>>
+    <<wait 1>>
+    <<TransformHeart "Final Boss Controller">>
+    <<DestroyActor DialogueSystem Nefarium>>
 
     Nefarium?: I feel the power of the heart coursing through me. Now just try and stop me... Cole.
     <<StartFinalBoss "Final Boss Controller">>
@@ -57,18 +60,19 @@ position: 257,-44
 title: postfinalboss
 position: 256,132
 ---
+    <<SpawnActor DialogueSystem Nefarium 655.54 306.42 0>>
     Nefarium: Noooooo!
     //Machine Disappears and Nefarium is launched into the sky.
     The floor twists and shakes and Nefarium is ejected from the machine.
     <<FlyInDirection Nefarium 0 20 1 true>>
+    <<FadeoutHeart DialogueSystem Heart>>
     And in the next instance, the machines dissapears in a burst of light.
 
     //The floating pieces of land begin to fall and eventually land in a body of water.
 
     //Cole and his Father exchange a few words and head home.
-
-    <<FadeToBlack 5>>
-    
+    <<SpawnActor DialogueSystem Father 655.11 295.44 0>>
+    <<EnableDialogue FatherEndTrigger>>
     //At home, Cole, his father, his friend and his mother share a warm meal.
 
     //Fin
@@ -76,14 +80,35 @@ position: 256,132
 
 ===
 
+title: fatherend
+---
+    <<Move Player 653.42 1 true>>
+    Father: I'm so proud of you, Cole!
+    Father: Now Nefarium has no way to enact his plans, whatever they were.
+    Father: Hopefully he has the decent plan to stay away..
+    Father: Although that strange machine.. Nefarium said he didn't build it, so where did it come from?
+    Father: No matter, let's head home?
+    -> How?
+        Father: That is a good question.
+    -> Yes, lets
+        Father: Well, we need to find out how to get down now.
+    Almost as if in response to your conversation..
+    The floating islands begin to drift back down towards the ground now that Nefarium's power no longer affects them
+    Father: Well, isn't that convenient.
+    Father: Let's head home!
+    <<FadeToBlack 5>>
+    Once home, Cole and his father reunite with the rest of the villagers.
+    A lot of work was needed to repair the damages caused by Nefarium,
+    but the villagers took these challenges in stride.
+    Once the village was mostly repaired, Cole's family enjoyed a warm meal together and Cole took a well earned rest..
+    <<wait 0.1>>
+    <<LoadLevel 0>>
+===
 
 title: bossphasewarning
 tags:
 position: -202,-45
 ---
-    <<Fly Player 621.5 295.5 0 2 true>>
-    Cole: Oh no! The floor is Rising, I need to move.
-    //<<JumpSlerp DialogueSystem Player -149 174.4 0 1>>
-    <<JumpInDirection Player 5 1 10>>
+    Cole: Oh no! The floor is Rising, I need to be careful.
     <<TriggerNextFinalBossPhase "Final Boss Controller">>
 ===

@@ -11,8 +11,11 @@ public class ArrowCollision : MonoBehaviour
 
     [SerializeField] private LayerMask groundLayers;
 
+    private GameObject reflector;
+
     public bool CanHitGround { get => canHitGround; set => canHitGround = value; }
     public Vector3 Direction { get => direction; set => direction = value; }
+    public GameObject Reflector { get => reflector;}
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -27,6 +30,7 @@ public class ArrowCollision : MonoBehaviour
         else if(collision.gameObject.CompareTag("BossReflector"))
         {
             gameObject.layer = 9;
+            reflector = collision.gameObject;
             GetComponent<Rigidbody2D>().velocity = -direction * 10;
             transform.RotateAround(transform.position, Vector3.forward, 180);
         }

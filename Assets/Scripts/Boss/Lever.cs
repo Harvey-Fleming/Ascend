@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Lever : MonoBehaviour
 {
-    bool hasUsed = false;
+    protected bool hasUsed = false;
+    protected bool isEnabled = true;
 
     [SerializeField] float downTime = 1f;
 
     public bool HasUsed { get => hasUsed; set => hasUsed = value; }
     public float DownTime { get => downTime; set => downTime = value; }
+    public bool IsEnabled { get => isEnabled; set => isEnabled = value; }
 
     public virtual void ResetLever()
     {

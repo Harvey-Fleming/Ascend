@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Splines;
+using UnityEngine.Tilemaps;
 using Yarn.Unity;
 
 public class DialogueEvents : MonoBehaviour
@@ -460,6 +461,7 @@ public class DialogueEvents : MonoBehaviour
 
     #endregion
 
+    #region - Loading Levels
     [YarnCommand("CompleteLevel")]
     public static void LoadNextLevel()
     {
@@ -480,6 +482,9 @@ public class DialogueEvents : MonoBehaviour
         AudioManager.instance.StopAll();
         GameManager.instance.LoadLevel(index);
     }
+    #endregion
+
+    #region - music
 
     [YarnCommand("PlayMusic")]
     public static void PlayMusic(string name)
@@ -498,11 +503,75 @@ public class DialogueEvents : MonoBehaviour
     {
         AudioManager.instance.FadeInSound(fadeInname, fadeDuration);
     }
+    #endregion
 
     [YarnCommand("StartWarden")]
     public static void StartWardenFight()
     {
         FindObjectOfType<Warden>().IsActive = true;
+    }
+
+
+    #region - Friend Animation Events
+
+    [YarnCommand("SetFriendGravity")]
+    public static void SetFriendGravityActiveState(bool isActive)
+    {
+        GameObject target = GameObject.Find("Friend");
+        target.GetComponent<FriendAnimation>().IsGravityEnabled = isActive;
+    }
+
+    [YarnCommand("StartFriendLift")]
+    public static void StartFriendLiftParticles()
+    {
+        GameObject target = GameObject.Find("Friend");
+        target.transform.GetChild(0).GetComponent<ParticleSystem>().Play();
+    }
+    [YarnCommand("StopFriendLift")]
+    public static void StopFriendLiftParticles()
+    {
+        GameObject target = GameObject.Find("Friend");
+        target.transform.GetChild(0).GetComponent<ParticleSystem>().Stop();
+    }
+
+
+    #endregion
+
+    [YarnCommand("FadeoutHeart")]
+    public void FadeoutHeartMethod(GameObject heart)
+    {
+        StartCoroutine(FadeoutHeart(heart));
+    }
+
+    private IEnumerator FadeoutHeart(GameObject heart)
+    {
+        SpriteRenderer spriteRenderer = heart.GetComponent<SpriteRenderer>();
+        Color color = new(spriteRenderer.color.r, spriteRenderer.color.g, spriteRenderer.color.b, 1);
+        float t = 0;
+        while (spriteRenderer.color.a > 0)
+        {
+            color.a = Mathf.Lerp(spriteRenderer.color.a, 0, t);
+            spriteRenderer.color = color;
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        Tilemap bloodMap = GameObject.Find("BloodPool").GetComponent<Tilemap>();
+        t = 0;
+        while (bloodMap.color.a > 0)
+        {
+            color.a = Mathf.Lerp(bloodMap.color.a, 0, t);
+            bloodMap.color = color;
+            t += Time.deltaTime;
+            yield return null;
+        }
+        Destroy(bloodMap.gameObject);
+        yield return null;
+    }
+    [YarnCommand("EnableDialogue")]
+    public static void EnableEndDialogue(string name)
+    {
+        GameObject.Find(name).GetComponent<BoxCollider2D>().enabled = true;
     }
 
 

@@ -54,7 +54,8 @@ public class FinalBoss : Boss
     [SerializeField] LayerMask playerMask;
     [SerializeField] private float beamSpeed = 10f;
 
-
+    [Space]
+    [SerializeField] private GameObject heart;
 
     public LayerMask BeamlayerMask { get => beamlayerMask; set => beamlayerMask = value; }
     public LayerMask PlayerMask { get => playerMask; set => playerMask = value; }
@@ -65,10 +66,6 @@ public class FinalBoss : Boss
     public Coroutine Beam3 { get => beam3; set => beam3 = value; }
     public Coroutine Beam4 { get => beam4; set => beam4 = value; }
     public bool IsActive { get => isActive; set => isActive = value; }
-
-
-
-
 
     #endregion
 
@@ -112,6 +109,12 @@ public class FinalBoss : Boss
         {
             leverStates.Add(lever.gameObject, false);
         }
+
+        foreach (KeyValuePair<GameObject, bool> pair in leverStates)
+        {
+            Debug.Log(pair.Key + " has a value of " + pair.Value);
+
+        }
     }
 
     public void FlipLever(GameObject lever, bool isFlipped)
@@ -126,31 +129,42 @@ public class FinalBoss : Boss
             if (pair.Value == false)
             {
                 return;
-            }
-               
+            }  
         }
         TakeDamage();
         ResetLevers?.Invoke();
     }
 
-
+    [ContextMenu("Damage Heart")]
     public override void TakeDamage()
     {
+        Debug.Log(currentHealth);
         StopAllCoroutines();
+        currentState.EndState();
         base.TakeDamage();
 
-        if(currentHealth == maxHealth - 1)
+        heart.GetComponent<Animator>().SetTrigger("takedamage");
+
+        if (currentHealth == maxHealth - 1)
         {         
             GameObject.FindObjectOfType<DialogueRunner>().StartDialogue("bossphasewarning");
+            ResetLeverDictionary();
+            return;
         }
 
         if(currentHealth <= 0)
         {
             currentState.EndState();
+            heart.GetComponent<Animator>().SetTrigger("Death");
+            GameObject.Find("HeartDeathParticles").GetComponent<ParticleSystem>().Play();
             currentState = new FinalDeathState(this);
             GameObject.FindObjectOfType<DialogueRunner>().StartDialogue("postfinalboss");
         }
 
+        if (currentState is FinalBeamsState)
+            currentState = new FinalArrowState(this);
+        else if (currentState is FinalArrowState)
+            currentState = new FinalBeamsState(this);
         ResetLeverDictionary();
     }
 
@@ -165,6 +179,20 @@ public class FinalBoss : Boss
     private void OnEnable()
     {
         FinalBossLever.flipLever.AddListener(FlipLever);
+    }
+
+    [YarnCommand("TransformHeart")]
+    public void TransformHeart()
+    {
+        if(heart.TryGetComponent<Animator>(out Animator heartAnimator))
+        {
+            heartAnimator.SetBool("isCombined", true);
+        }
+        else
+        {
+            Debug.Log("Heart Does not have an animator");
+        }
+        
     }
 }
 
@@ -414,9 +442,9 @@ public class FinalSprayState : State
 
         heart = controller.gameObject.transform.GetChild(1).gameObject;
 
-        foreach(Transform child in heart.transform)
+        for(int i = 0; i < 2; i++)
         {
-            child.GetComponent<ParticleSystem>().Play();
+            heart.transform.GetChild(i).GetComponent<ParticleSystem>().Play();
         }
 
         bloodPool = GameObject.Find("BloodPool");
@@ -425,9 +453,9 @@ public class FinalSprayState : State
 
     public override void EndState()
     {
-        foreach (Transform child in heart.transform)
+        for (int i = 0; i < 2; i++)
         {
-            child.GetComponent<ParticleSystem>().Stop();
+            heart.transform.GetChild(i).GetComponent<ParticleSystem>().Stop();
         }
     }
 

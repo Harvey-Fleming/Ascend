@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
     private float level = 0;
 
     [SerializeField] [Space] private bool shouldLoad;
-    [SerializeField] private bool isHardMode;
+    [SerializeField] private bool isHardMode = false;
 
     public bool IsHardMode { get => isHardMode; set => isHardMode = value; }
 
